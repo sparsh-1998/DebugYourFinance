@@ -26,7 +26,7 @@ export default function About() {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white dark:bg-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -36,10 +36,10 @@ export default function About() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary dark:text-white mb-4">
             Your Financial Data. Your Control.
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             We built DebugYourFinance with privacy at its core. Every calculation happens
             in your browser—no servers, no tracking, no compromises.
           </p>
@@ -56,15 +56,15 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="text-center p-6 rounded-xl hover:bg-slate-50 transition-colors"
+                className="text-center p-6 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 dark:bg-accent/20 rounded-full mb-4">
                   <Icon className="h-8 w-8 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold text-primary mb-2">
+                <h3 className="text-xl font-semibold text-primary dark:text-white mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600">
+                <p className="text-slate-600 dark:text-slate-400">
                   {feature.description}
                 </p>
               </motion.div>

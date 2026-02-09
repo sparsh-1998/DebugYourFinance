@@ -1,38 +1,51 @@
 /**
  * Calculate SIP (Systematic Investment Plan) returns
- * @param {number} monthlyInvestment - Monthly investment amount
+ * @param {number} monthlyInvestment - Initial monthly investment amount
  * @param {number} annualReturn - Expected annual return (%)
  * @param {number} years - Investment period in years
+ * @param {number} stepUpPercentage - Annual increase in investment (0 for no step-up)
  * @returns {object} - { investedAmount, futureValue, wealthGained, yearlyData }
  */
-export function calculateSIP(monthlyInvestment, annualReturn, years) {
+export function calculateSIP(monthlyInvestment, annualReturn, years, stepUpPercentage = 0) {
   const monthlyRate = annualReturn / 12 / 100;
-  const months = years * 12;
-  const investedAmount = monthlyInvestment * months;
+  const stepUpRate = stepUpPercentage / 100;
 
-  // Future Value formula: M × [{(1 + r)^n - 1} / r] × (1 + r)
-  const futureValue = monthlyInvestment *
-    (((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate));
-
-  const wealthGained = futureValue - investedAmount;
-
-  // Generate yearly data for chart
+  let totalInvested = 0;
+  let futureValue = 0;
   const yearlyData = [];
+
+  // Calculate step-up SIP year by year
+  let currentMonthlyInvestment = monthlyInvestment;
+
   for (let year = 1; year <= years; year++) {
-    const m = year * 12;
-    const invested = monthlyInvestment * m;
-    const fv = monthlyInvestment *
-      (((Math.pow(1 + monthlyRate, m) - 1) / monthlyRate) * (1 + monthlyRate));
+    // Calculate for this year (12 months)
+    for (let month = 1; month <= 12; month++) {
+      // Add monthly investment
+      totalInvested += currentMonthlyInvestment;
+
+      // Calculate growth on current corpus
+      futureValue = (futureValue + currentMonthlyInvestment) * (1 + monthlyRate);
+    }
+
+    // Store yearly data
     yearlyData.push({
       year,
-      invested: Math.round(invested),
-      wealth: Math.round(fv - invested),
-      total: Math.round(fv)
+      invested: Math.round(totalInvested),
+      wealth: Math.round(futureValue - totalInvested),
+      total: Math.round(futureValue),
+      monthlyInvestment: Math.round(currentMonthlyInvestment)
     });
+
+    // Apply step-up for next year
+    if (stepUpPercentage > 0 && year < years) {
+      currentMonthlyInvestment = currentMonthlyInvestment * (1 + stepUpRate);
+    }
   }
 
+  const wealthGained = futureValue - totalInvested;
+
   return {
-    investedAmount: Math.round(investedAmount),
+    investedAmount: Math.round(totalInvested),
     futureValue: Math.round(futureValue),
     wealthGained: Math.round(wealthGained),
     yearlyData
@@ -148,13 +161,24 @@ export function calculateTax(income, deductions, regime) {
   let totalDeductions = 0;
 
   if (regime === 'old') {
-    // Old regime: Standard deduction + 80C + 80D + HRA + Home Loan
+    // Old regime: Multiple deductions available
     standardDeduction = 50000;
+
+    // Calculate major deductions with limits
+    const section80C = Math.min(deductions.section80C || 0, 150000);
+    const section80D = Math.min(deductions.section80D || 0, 50000);
+    const hra = deductions.hra || 0;
+    const npsPersonal = Math.min(deductions.npsPersonal || 0, 50000); // 80CCD(1B) - Additional ₹50K
+    const npsEmployer = deductions.npsEmployer || 0; // 80CCD(2) - No limit
+    const otherDeductions = deductions.otherDeductions || 0; // Home Loan, LTA, Education Loan, Donations, etc.
+
     totalDeductions = standardDeduction +
-      Math.min(deductions.section80C || 0, 150000) +
-      Math.min(deductions.section80D || 0, 50000) +
-      (deductions.hra || 0) +
-      Math.min(deductions.homeLoan || 0, 200000);
+      section80C +
+      section80D +
+      hra +
+      npsPersonal +
+      npsEmployer +
+      otherDeductions;
 
     taxableIncome = Math.max(0, income - totalDeductions);
 
@@ -226,6 +250,191 @@ export function calculateTax(income, deductions, regime) {
       deductions: standardDeduction
     };
   }
+}
+
+/**
+ * Calculate SWP (Systematic Withdrawal Plan)
+ * @param {number} lumpsumAmount - Initial corpus amount
+ * @param {number} monthlyWithdrawal - Monthly withdrawal amount
+ * @param {number} annualReturn - Expected annual return (%)
+ * @param {number} years - Withdrawal period in years
+ * @param {number} inflationRate - Annual inflation rate (%) for inflation-adjusted withdrawals
+ * @returns {object} - { yearlyData, totalWithdrawn, finalCorpus, yearsLastedMonthly }
+ */
+export function calculateSWP(lumpsumAmount, monthlyWithdrawal, annualReturn, years, inflationRate = 0) {
+  const monthlyRate = annualReturn / 12 / 100;
+
+  let corpus = lumpsumAmount;
+  let totalWithdrawn = 0;
+  let currentWithdrawal = monthlyWithdrawal;
+  const yearlyData = [];
+  let corpusDepleted = false;
+  let monthsDepleted = 0;
+
+  for (let year = 1; year <= years; year++) {
+    let yearWithdrawals = 0;
+
+    for (let month = 1; month <= 12; month++) {
+      // Apply inflation to withdrawal amount (annual adjustment)
+      if (month === 1 && year > 1 && inflationRate > 0) {
+        currentWithdrawal = currentWithdrawal * (1 + inflationRate / 100);
+      }
+
+      // Check if corpus can support withdrawal
+      if (corpus >= currentWithdrawal) {
+        corpus -= currentWithdrawal;
+        totalWithdrawn += currentWithdrawal;
+        yearWithdrawals += currentWithdrawal;
+
+        // Apply monthly returns on remaining corpus
+        corpus = corpus * (1 + monthlyRate);
+      } else {
+        // Corpus depleted
+        if (!corpusDepleted) {
+          corpusDepleted = true;
+          monthsDepleted = (year - 1) * 12 + month;
+        }
+        corpus = 0;
+      }
+    }
+
+    yearlyData.push({
+      year,
+      corpus: Math.round(corpus),
+      withdrawn: Math.round(yearWithdrawals),
+      monthlyWithdrawal: Math.round(currentWithdrawal),
+      cumulativeWithdrawn: Math.round(totalWithdrawn)
+    });
+
+    if (corpusDepleted && corpus === 0) break;
+  }
+
+  const yearsLasted = corpusDepleted ? Math.floor(monthsDepleted / 12) : years;
+  const monthsLasted = corpusDepleted ? monthsDepleted % 12 : 0;
+
+  return {
+    yearlyData,
+    totalWithdrawn: Math.round(totalWithdrawn),
+    finalCorpus: Math.round(corpus),
+    yearsLasted,
+    monthsLasted,
+    corpusDepleted,
+    lastingPeriod: corpusDepleted
+      ? `${yearsLasted} years ${monthsLasted} months`
+      : `${years}+ years (corpus sustains)`
+  };
+}
+
+/**
+ * Calculate Rent vs Buy comparison
+ * @param {object} rentData - { monthlyRent, annualRentIncrease }
+ * @param {object} buyData - { homePrice, downPayment, loanAmount, interestRate, loanTenure }
+ * @param {number} expectedReturn - Expected return on investment (%)
+ * @param {number} years - Comparison period in years
+ * @returns {object} - Comprehensive comparison data
+ */
+export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
+  const { monthlyRent, annualRentIncrease } = rentData;
+  const { homePrice, downPayment, loanAmount, interestRate, loanTenure } = buyData;
+
+  // Calculate monthly EMI for home loan
+  const emi = calculateEMI(loanAmount, interestRate, loanTenure);
+
+  // Investment calculation for down payment
+  const monthlyReturnRate = expectedReturn / 12 / 100;
+  let investmentCorpus = downPayment;
+  let totalRentPaid = 0;
+  let totalEmiPaid = 0;
+  let currentRent = monthlyRent;
+  let loanBalance = loanAmount;
+
+  const yearlyData = [];
+
+  for (let year = 1; year <= years; year++) {
+    let yearRent = 0;
+    let yearEmi = 0;
+
+    for (let month = 1; month <= 12; month++) {
+      // Rent scenario
+      totalRentPaid += currentRent;
+      yearRent += currentRent;
+
+      // Grow investment corpus (rent money saved + down payment invested)
+      const monthlySavings = year <= loanTenure ? Math.max(0, emi - currentRent) : 0;
+      investmentCorpus = (investmentCorpus + monthlySavings) * (1 + monthlyReturnRate);
+
+      // Buy scenario - EMI payment
+      if (year <= loanTenure) {
+        const monthlyInterest = loanBalance * (interestRate / 12 / 100);
+        const principalPaid = emi - monthlyInterest;
+        loanBalance = Math.max(0, loanBalance - principalPaid);
+        totalEmiPaid += emi;
+        yearEmi += emi;
+      }
+    }
+
+    // Apply annual rent increase
+    if (year < years) {
+      currentRent = currentRent * (1 + annualRentIncrease / 100);
+    }
+
+    // Calculate net worth for both scenarios
+    const rentNetWorth = investmentCorpus; // Only investment corpus
+    const buyNetWorth = homePrice - loanBalance; // Home equity
+
+    yearlyData.push({
+      year,
+      rentPaid: Math.round(yearRent),
+      emiPaid: Math.round(yearEmi),
+      cumulativeRent: Math.round(totalRentPaid),
+      cumulativeEmi: Math.round(totalEmiPaid),
+      investmentCorpus: Math.round(investmentCorpus),
+      homeEquity: Math.round(homePrice - loanBalance),
+      rentNetWorth: Math.round(rentNetWorth),
+      buyNetWorth: Math.round(buyNetWorth),
+      currentRent: Math.round(currentRent)
+    });
+  }
+
+  // Final comparison
+  const rentScenarioValue = investmentCorpus;
+  const buyScenarioValue = homePrice - loanBalance; // Assuming home value remains same (conservative)
+  const opportunityCost = investmentCorpus - downPayment; // Gains from investing down payment
+
+  return {
+    yearlyData,
+    totalRentPaid: Math.round(totalRentPaid),
+    totalEmiPaid: Math.round(totalEmiPaid),
+    finalInvestmentCorpus: Math.round(investmentCorpus),
+    finalHomeEquity: Math.round(homePrice - loanBalance),
+    opportunityCost: Math.round(opportunityCost),
+    rentScenarioNetWorth: Math.round(rentScenarioValue),
+    buyScenarioNetWorth: Math.round(buyScenarioValue),
+    verdict: rentScenarioValue > buyScenarioValue ? 'Rent' : 'Buy',
+    difference: Math.round(Math.abs(rentScenarioValue - buyScenarioValue))
+  };
+}
+
+/**
+ * Format number with Indian numbering system (commas)
+ * @param {number} num - Number to format
+ * @returns {string} - Formatted string with Indian comma placement
+ */
+export function formatIndianNumber(num) {
+  if (!num && num !== 0) return '';
+  const numStr = num.toString();
+  const [integer, decimal] = numStr.split('.');
+
+  // Indian numbering: First comma after 3 digits from right, then every 2 digits
+  let lastThree = integer.substring(integer.length - 3);
+  const otherNumbers = integer.substring(0, integer.length - 3);
+
+  if (otherNumbers !== '') {
+    lastThree = ',' + lastThree;
+  }
+
+  const formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+  return decimal ? formatted + '.' + decimal : formatted;
 }
 
 /**

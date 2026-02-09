@@ -1,4 +1,5 @@
 import { Heart, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -25,31 +26,33 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-primary text-slate-300 py-12">
+    <footer className="bg-primary dark:bg-slate-950 text-slate-300 dark:text-slate-400 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-white font-bold text-xl mb-3">DebugYourFinance</h3>
-            <p className="text-sm text-slate-400">
+            <h3 className="text-white dark:text-slate-100 font-bold text-xl mb-3">DebugYourFinance</h3>
+            <p className="text-sm text-slate-400 dark:text-slate-500">
               Privacy-first financial calculators. No login, no tracking, just pure value.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-3">Tools</h4>
+            <h4 className="text-white dark:text-slate-100 font-semibold mb-3">Tools</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#tools" className="hover:text-accent transition-colors">SIP Calculator</a></li>
-              <li><a href="#tools" className="hover:text-accent transition-colors">Tax Regime Simulator</a></li>
-              <li><a href="#tools" className="hover:text-accent transition-colors">Loan Tenure Reducer</a></li>
+              <li><Link to="/tools" className="hover:text-accent transition-colors">SIP Calculator</Link></li>
+              <li><Link to="/tools" className="hover:text-accent transition-colors">SWP Generator</Link></li>
+              <li><Link to="/tools" className="hover:text-accent transition-colors">Tax Regime Simulator</Link></li>
+              <li><Link to="/tools" className="hover:text-accent transition-colors">Loan Tenure Reducer</Link></li>
+              <li><Link to="/tools" className="hover:text-accent transition-colors">Rent vs Buy</Link></li>
             </ul>
           </div>
 
           {/* Social */}
           <div>
-            <h4 className="text-white font-semibold mb-3">Connect</h4>
+            <h4 className="text-white dark:text-slate-100 font-semibold mb-3">Connect</h4>
             <div className="flex space-x-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -59,7 +62,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`text-slate-400 ${social.color} transition-colors`}
+                    className={`text-slate-400 dark:text-slate-500 ${social.color} transition-colors`}
                     aria-label={social.name}
                   >
                     <Icon className="h-6 w-6" />
@@ -71,7 +74,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-slate-700 pt-8 text-center text-sm">
+        <div className="border-t border-slate-700 dark:border-slate-800 pt-8 text-center text-sm">
           <p className="flex items-center justify-center space-x-2">
             <span>&copy; {currentYear} DebugYourFinance. Made with</span>
             <Heart className="h-4 w-4 text-red-500 fill-current" />

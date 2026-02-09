@@ -4,88 +4,116 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { TrendingUp } from 'lucide-react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { calculateSIP, formatCurrency } from '../utils/calculations';
+import { FormInput, RangeSlider, Toggle, ResultCard, SectionHeader, ChartContainer, InfoBox } from './common';
+import {
+  CALC_SIP,
+  CALC_SIP_DESC,
+  LABEL_MONTHLY_INVESTMENT,
+  LABEL_EXPECTED_RETURN,
+  LABEL_TIME_PERIOD,
+  PLACEHOLDER_10K,
+  SIP_STEPUP,
+  SIP_STEPUP_DESC,
+  SIP_STEPUP_BADGE,
+  SIP_STEPUP_PERCENTAGE,
+  SIP_INVESTED_AMOUNT,
+  SIP_WEALTH_GAINED,
+  SIP_FUTURE_VALUE,
+  SIP_GROWTH_PROJECTION,
+  SIP_STEPUP_NOTE,
+  CHART_YEARS,
+  CHART_AMOUNT,
+  CHART_SUBTITLE_STEP_UP,
+  VALIDATION_SIP
+} from '../constants';
+import { UNIT_PERCENT, UNIT_YEARS } from '../constants/units';
 
 export default function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useLocalStorage('sip_monthly', 10000);
   const [expectedReturn, setExpectedReturn] = useLocalStorage('sip_return', 12);
   const [timePeriod, setTimePeriod] = useLocalStorage('sip_years', 10);
+  const [stepUpEnabled, setStepUpEnabled] = useLocalStorage('sip_stepup_enabled', false);
+  const [stepUpPercentage, setStepUpPercentage] = useLocalStorage('sip_stepup_percentage', 10);
   const [results, setResults] = useState(null);
 
   useEffect(() => {
-    const calculated = calculateSIP(monthlyInvestment, expectedReturn, timePeriod);
+    const calculated = calculateSIP(
+      monthlyInvestment,
+      expectedReturn,
+      timePeriod,
+      stepUpEnabled ? stepUpPercentage : 0
+    );
     setResults(calculated);
-  }, [monthlyInvestment, expectedReturn, timePeriod]);
+  }, [monthlyInvestment, expectedReturn, timePeriod, stepUpEnabled, stepUpPercentage]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="bg-accent/10 p-3 rounded-lg">
-          <TrendingUp className="h-6 w-6 text-accent" />
-        </div>
-        <div>
-          <h3 className="text-2xl font-bold text-primary">SIP Calculator</h3>
-          <p className="text-sm text-slate-600">Plan your wealth growth</p>
-        </div>
-      </div>
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+      <SectionHeader
+        icon={TrendingUp}
+        title={CALC_SIP}
+        description={CALC_SIP_DESC}
+      />
 
       {/* Input Form */}
       <div className="space-y-6 mb-8">
-        {/* Monthly Investment */}
-        <div>
-          <label className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-slate-700">Monthly Investment</span>
-            <span className="text-lg font-semibold text-accent">{formatCurrency(monthlyInvestment)}</span>
-          </label>
-          <input
-            type="number"
-            value={monthlyInvestment}
-            onChange={(e) => setMonthlyInvestment(Number(e.target.value))}
-            className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-accent focus:outline-none transition-colors"
-            min="500"
-            step="500"
-          />
-        </div>
+        <FormInput
+          label={LABEL_MONTHLY_INVESTMENT}
+          value={monthlyInvestment}
+          setValue={setMonthlyInvestment}
+          validation={VALIDATION_SIP.monthlyInvestment}
+          placeholder={PLACEHOLDER_10K}
+        />
 
-        {/* Expected Return */}
-        <div>
-          <label className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-slate-700">Expected Return (% p.a.)</span>
-            <span className="text-lg font-semibold text-accent">{expectedReturn}%</span>
-          </label>
-          <input
-            type="range"
-            value={expectedReturn}
-            onChange={(e) => setExpectedReturn(Number(e.target.value))}
-            className="w-full accent-accent"
-            min="6"
-            max="20"
-            step="0.5"
-          />
-          <div className="flex justify-between text-xs text-slate-500 mt-1">
-            <span>6%</span>
-            <span>20%</span>
-          </div>
-        </div>
+        <RangeSlider
+          label={LABEL_EXPECTED_RETURN}
+          value={expectedReturn}
+          onChange={setExpectedReturn}
+          min={6}
+          max={20}
+          step={0.5}
+          unit={UNIT_PERCENT}
+        />
 
-        {/* Time Period */}
-        <div>
-          <label className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-slate-700">Time Period (Years)</span>
-            <span className="text-lg font-semibold text-accent">{timePeriod} years</span>
-          </label>
-          <input
-            type="range"
-            value={timePeriod}
-            onChange={(e) => setTimePeriod(Number(e.target.value))}
-            className="w-full accent-accent"
-            min="1"
-            max="30"
-            step="1"
+        <RangeSlider
+          label={LABEL_TIME_PERIOD}
+          value={timePeriod}
+          onChange={setTimePeriod}
+          min={1}
+          max={30}
+          step={1}
+          unit={UNIT_YEARS}
+        />
+
+        {/* Step-Up SIP Section */}
+        <div className="bg-gradient-to-r from-accent/5 to-accent/10 dark:from-accent/10 dark:to-accent/20 rounded-lg p-4 border-2 border-accent/20 dark:border-accent/30">
+          <Toggle
+            label={SIP_STEPUP}
+            description={SIP_STEPUP_DESC}
+            badge={SIP_STEPUP_BADGE}
+            enabled={stepUpEnabled}
+            onToggle={() => setStepUpEnabled(!stepUpEnabled)}
           />
-          <div className="flex justify-between text-xs text-slate-500 mt-1">
-            <span>1 year</span>
-            <span>30 years</span>
-          </div>
+
+          {stepUpEnabled && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="pt-3 border-t border-accent/20 dark:border-accent/30">
+                <RangeSlider
+                  label={SIP_STEPUP_PERCENTAGE}
+                  value={stepUpPercentage}
+                  onChange={setStepUpPercentage}
+                  min={1}
+                  max={20}
+                  step={1}
+                  unit={UNIT_PERCENT}
+                />
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
 
@@ -98,46 +126,66 @@ export default function SIPCalculator() {
         >
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-slate-50 rounded-lg p-4 border-2 border-slate-200">
-              <p className="text-sm text-slate-600 mb-1">Invested Amount</p>
-              <p className="text-2xl font-bold text-primary">{formatCurrency(results.investedAmount)}</p>
-            </div>
-            <div className="bg-accent/10 rounded-lg p-4 border-2 border-accent">
-              <p className="text-sm text-slate-600 mb-1">Wealth Gained</p>
-              <p className="text-2xl font-bold text-accent">{formatCurrency(results.wealthGained)}</p>
-            </div>
-            <div className="bg-primary/10 rounded-lg p-4 border-2 border-primary">
-              <p className="text-sm text-slate-600 mb-1">Future Value</p>
-              <p className="text-2xl font-bold text-primary">{formatCurrency(results.futureValue)}</p>
-            </div>
+            <ResultCard
+              label={SIP_INVESTED_AMOUNT}
+              value={formatCurrency(results.investedAmount)}
+              variant="default"
+              subtext={stepUpEnabled ? `With ${stepUpPercentage}% annual increase` : ''}
+            />
+            <ResultCard
+              label={SIP_WEALTH_GAINED}
+              value={formatCurrency(results.wealthGained)}
+              variant="accent"
+            />
+            <ResultCard
+              label={SIP_FUTURE_VALUE}
+              value={formatCurrency(results.futureValue)}
+              variant="primary"
+            />
           </div>
 
           {/* Chart */}
-          <div className="bg-slate-50 rounded-lg p-4">
-            <h4 className="text-lg font-semibold text-primary mb-4">Growth Projection</h4>
+          <ChartContainer
+            title={SIP_GROWTH_PROJECTION}
+            subtitle={stepUpEnabled ? CHART_SUBTITLE_STEP_UP : null}
+          >
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
                 <XAxis
                   dataKey="year"
-                  label={{ value: 'Years', position: 'insideBottom', offset: -5 }}
+                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: -5 }}
                   tick={{ fill: '#64748b' }}
+                  className="dark:fill-slate-400"
                 />
                 <YAxis
-                  label={{ value: 'Amount (₹)', angle: -90, position: 'insideLeft' }}
+                  label={{ value: CHART_AMOUNT, angle: -90, position: 'insideLeft' }}
                   tick={{ fill: '#64748b' }}
+                  className="dark:fill-slate-400"
                   tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: '#fff', border: '2px solid #e2e8f0', borderRadius: '8px' }}
+                  contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
                 />
                 <Legend />
-                <Bar dataKey="invested" fill="#64748b" name="Invested Amount" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="wealth" fill="#10b981" name="Wealth Gained" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="invested" fill="#64748b" name={SIP_INVESTED_AMOUNT} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="wealth" fill="#10b981" name={SIP_WEALTH_GAINED} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </div>
+
+            {/* Step-Up Info */}
+            {stepUpEnabled && results.yearlyData.length > 0 && (
+              <InfoBox variant="info" className="mt-4">
+                <strong>Note:</strong> {SIP_STEPUP_NOTE(
+                  formatCurrency(monthlyInvestment),
+                  formatCurrency(results.yearlyData[results.yearlyData.length - 1].monthlyInvestment),
+                  timePeriod,
+                  stepUpPercentage
+                )}
+              </InfoBox>
+            )}
+          </ChartContainer>
         </motion.div>
       )}
     </div>
