@@ -49,7 +49,7 @@ export default function InstagramSection() {
   }, []);
 
   return (
-    <section id="socials" className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-slate-50">
+    <section id="socials" className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-slate-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -60,12 +60,12 @@ export default function InstagramSection() {
           className="text-center mb-12"
         >
           <div className="inline-flex items-center space-x-2 mb-4">
-            <Instagram className="h-8 w-8 text-pink-600" />
-            <h2 className="text-3xl md:text-4xl font-bold text-primary">
+            <Instagram className="h-8 w-8 text-pink-600 dark:text-pink-400" />
+            <h2 className="text-3xl md:text-4xl font-bold text-primary dark:text-white">
               Latest from @DebugYourFinance
             </h2>
           </div>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-600 dark:text-slate-300">
             Follow us for daily financial tips, tricks, and insights
           </p>
         </motion.div>
@@ -82,12 +82,12 @@ export default function InstagramSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8 flex items-start space-x-3"
+            className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-8 flex items-start space-x-3"
           >
-            <AlertCircle className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="h-6 w-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-yellow-900 mb-1">Unable to load Instagram feed</h3>
-              <p className="text-yellow-700 text-sm">
+              <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-1">Unable to load Instagram feed</h3>
+              <p className="text-yellow-700 dark:text-yellow-300 text-sm">
                 {error}. Please check your Instagram API configuration or visit our Instagram profile directly.
               </p>
             </div>
