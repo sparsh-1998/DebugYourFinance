@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingDown } from 'lucide-react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { calculateSWP, formatCurrency } from '../utils/calculations';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { calculateSWP, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
   RangeSlider,
@@ -13,7 +13,7 @@ import {
   AlertBanner,
   InfoBox,
   ChartContainer
-} from './common';
+} from '../common';
 import {
   CALC_SWP,
   CALC_SWP_DESC,
@@ -38,8 +38,8 @@ import {
   CHART_TOTAL_WITHDRAWN,
   PLACEHOLDER_50L,
   PLACEHOLDER_30K
-} from '../constants/messages';
-import { UNIT_PERCENT, UNIT_YEARS } from '../constants/units';
+} from '../../constants/messages';
+import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
 
 export default function SWPCalculator() {
   const [lumpsumAmount, setLumpsumAmount] = useLocalStorage('swp_lumpsum', 5000000);

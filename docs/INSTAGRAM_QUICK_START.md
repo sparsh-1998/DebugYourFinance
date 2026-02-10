@@ -86,7 +86,7 @@ Set a calendar reminder for 50 days from now:
 node scripts/get-instagram-token.js refresh YOUR_CURRENT_TOKEN
 
 # Copy new token to .env
-# Update in Vercel/Netlify environment variables
+# Update in Vercel environment variables
 ```
 
 ---
@@ -103,17 +103,6 @@ vercel
 # vercel.com → Your Project → Settings → Environment Variables
 # Key: INSTAGRAM_ACCESS_TOKEN
 # Value: Your long-lived token
-```
-
-### Netlify
-
-```bash
-# Deploy
-netlify deploy --prod
-
-# Add environment variable in dashboard:
-# app.netlify.com → Site Settings → Environment Variables
-# Add: INSTAGRAM_ACCESS_TOKEN = Your token
 ```
 
 ---

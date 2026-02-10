@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Home, TrendingUp, CheckCircle2 } from 'lucide-react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { calculateRentVsBuy, formatCurrency } from '../utils/calculations';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { calculateRentVsBuy, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
   RangeSlider,
@@ -12,7 +12,7 @@ import {
   HighlightCard,
   ChartContainer,
   InfoBox
-} from './common';
+} from '../common';
 import {
   CALC_RENT_VS_BUY,
   CALC_RENT_VS_BUY_DESC,
@@ -53,8 +53,8 @@ import {
   PLACEHOLDER_25K,
   PLACEHOLDER_50L,
   PLACEHOLDER_10L
-} from '../constants/messages';
-import { UNIT_PERCENT, UNIT_YEARS } from '../constants/units';
+} from '../../constants/messages';
+import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
 
 export default function RentVsBuyCalculator() {
   // Rent inputs

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Home, TrendingDown } from 'lucide-react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { calculateEMI, calculatePrepaymentImpact, formatCurrency } from '../utils/calculations';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { calculateEMI, calculatePrepaymentImpact, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
   RangeSlider,
@@ -13,7 +13,7 @@ import {
   ComparisonCard,
   HighlightCard,
   ChartContainer
-} from './common';
+} from '../common';
 import {
   CALC_LOAN_DESC,
   LABEL_LOAN_AMOUNT,
@@ -40,8 +40,8 @@ import {
   CHART_WITH_PREPAYMENT,
   PLACEHOLDER_40L,
   PLACEHOLDER_2L
-} from '../constants/messages';
-import { UNIT_PERCENT, UNIT_YEARS } from '../constants/units';
+} from '../../constants/messages';
+import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
 
 export default function LoanTenureReducer() {
   const [principal, setPrincipal] = useLocalStorage('loan_principal', 5000000);

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import InstagramSection from '../components/InstagramSection';
+import InstagramSection from '../components/features/InstagramSection';
 
 export default function SocialPage() {
   return (

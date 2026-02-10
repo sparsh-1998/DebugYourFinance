@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import Hero from '../components/Hero';
-import AdBanner from '../components/AdBanner';
-import About from '../components/About';
+import Hero from '../components/layout/Hero';
+import AdBanner from '../components/features/AdBanner';
+import About from '../components/layout/About';
 
 export default function HomePage() {
   return (

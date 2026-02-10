@@ -290,7 +290,7 @@ localStorage.getItem('loan_frequency')   // onetime/annual/monthly
 
 ### Phase 2: Deployment
 - [ ] Build production bundle (`npm run build`)
-- [ ] Deploy to Vercel/Netlify
+- [ ] Deploy to Vercel
 - [ ] Set up custom domain (optional)
 - [ ] Configure meta tags for SEO
 

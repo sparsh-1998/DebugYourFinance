@@ -138,19 +138,6 @@ Visit `http://localhost:5173` and scroll to the Instagram section. You should se
 6. Click **Save**
 7. Redeploy your app
 
-### For Netlify
-
-1. Push your code to GitHub (without `.env` file)
-2. Go to [Netlify Dashboard](https://app.netlify.com/)
-3. Import your repository
-4. Go to **Site settings** → **Environment variables**
-5. Click **Add a variable**
-6. Add:
-   - **Key**: `INSTAGRAM_ACCESS_TOKEN`
-   - **Value**: Your long-lived token
-7. Click **Save**
-8. Trigger a new deploy
-
 ---
 
 ## 🔄 Token Refresh (Every 60 Days)
@@ -177,7 +164,7 @@ Update your environment variables with the new token.
 Create a cron job or scheduled function to refresh tokens automatically:
 
 ```javascript
-// netlify/functions/refresh-token.js or api/refresh-token.js
+// api/refresh-token.js
 export default async function handler(req, res) {
   const currentToken = process.env.INSTAGRAM_ACCESS_TOKEN;
 
@@ -250,7 +237,7 @@ export default async function handler(req, res) {
 - [ ] Added token to `.env` file locally
 - [ ] Added `.env` to `.gitignore`
 - [ ] Tested locally - videos showing
-- [ ] Added token to Vercel/Netlify environment variables
+- [ ] Added token to Vercel environment variables
 - [ ] Deployed to production
 - [ ] Set calendar reminder for token refresh (60 days)
 

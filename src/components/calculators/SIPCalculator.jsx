@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp } from 'lucide-react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { calculateSIP, formatCurrency } from '../utils/calculations';
-import { FormInput, RangeSlider, Toggle, ResultCard, SectionHeader, ChartContainer, InfoBox } from './common';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { calculateSIP, formatCurrency } from '../../utils/calculations';
+import { FormInput, RangeSlider, Toggle, ResultCard, SectionHeader, ChartContainer, InfoBox } from '../common';
 import {
   CALC_SIP,
   CALC_SIP_DESC,
@@ -25,8 +25,8 @@ import {
   CHART_AMOUNT,
   CHART_SUBTITLE_STEP_UP,
   VALIDATION_SIP
-} from '../constants';
-import { UNIT_PERCENT, UNIT_YEARS } from '../constants/units';
+} from '../../constants';
+import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
 
 export default function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useLocalStorage('sip_monthly', 10000);

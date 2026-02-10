@@ -1,14 +1,14 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import AdBanner from '../components/AdBanner';
+import AdBanner from '../components/features/AdBanner';
 
 // Lazy load calculator components (they contain heavy Recharts charts)
-const SIPCalculator = lazy(() => import('../components/SIPCalculator'));
-const SWPCalculator = lazy(() => import('../components/SWPCalculator'));
-const TaxRegimeSimulator = lazy(() => import('../components/TaxRegimeSimulator'));
-const LoanTenureReducer = lazy(() => import('../components/LoanTenureReducer'));
-const RentVsBuyCalculator = lazy(() => import('../components/RentVsBuyCalculator'));
+const SIPCalculator = lazy(() => import('../components/calculators/SIPCalculator'));
+const SWPCalculator = lazy(() => import('../components/calculators/SWPCalculator'));
+const TaxRegimeSimulator = lazy(() => import('../components/calculators/TaxRegimeSimulator'));
+const LoanTenureReducer = lazy(() => import('../components/calculators/LoanTenureReducer'));
+const RentVsBuyCalculator = lazy(() => import('../components/calculators/RentVsBuyCalculator'));
 
 // Loading spinner for calculators
 function CalculatorLoader() {

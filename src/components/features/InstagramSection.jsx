@@ -14,14 +14,8 @@ export default function InstagramSection() {
         setLoading(true);
         setError(null);
 
-        // Try Vercel endpoint first, fallback to Netlify
-        let response;
-        try {
-          response = await fetch('/api/instagram');
-        } catch (err) {
-          // Fallback to Netlify Functions
-          response = await fetch('/.netlify/functions/instagram');
-        }
+        // Fetch from Vercel serverless function
+        const response = await fetch('/api/instagram');
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

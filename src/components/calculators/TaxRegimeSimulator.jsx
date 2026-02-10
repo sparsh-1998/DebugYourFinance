@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Receipt } from 'lucide-react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { calculateTax, formatCurrency } from '../utils/calculations';
-import FormInput from './common/FormInput';
-import SectionHeader from './common/SectionHeader';
-import ComparisonCard from './common/ComparisonCard';
-import AlertBanner from './common/AlertBanner';
-import ChartContainer from './common/ChartContainer';
-import InfoBox from './common/InfoBox';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { calculateTax, formatCurrency } from '../../utils/calculations';
+import FormInput from '../common/FormInput';
+import SectionHeader from '../common/SectionHeader';
+import ComparisonCard from '../common/ComparisonCard';
+import AlertBanner from '../common/AlertBanner';
+import ChartContainer from '../common/ChartContainer';
+import InfoBox from '../common/InfoBox';
 import {
   CALC_TAX,
   CALC_TAX_DESC,
@@ -40,7 +40,7 @@ import {
   PLACEHOLDER_50K,
   PLACEHOLDER_2L,
   PLACEHOLDER_1L,
-} from '../constants/messages';
+} from '../../constants/messages';
 
 export default function TaxRegimeSimulator() {
   const [income, setIncome] = useLocalStorage('tax_income', 1000000);

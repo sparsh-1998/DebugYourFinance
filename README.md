@@ -26,12 +26,12 @@ A privacy-first financial tools web application built with React, Vite, and Tail
 ### 📱 Dynamic Instagram Integration
 
 - **Live Feed**: Display your latest Instagram videos dynamically
-- **Serverless Architecture**: Secure API integration via Vercel/Netlify Functions
+- **Serverless Architecture**: Secure API integration via Vercel Functions
 - **Auto-Refresh**: Feed updates automatically (cached for 1 hour)
 - **Fallback Support**: Graceful degradation if API is unavailable
 - **Helper Scripts**: Automated token management tools included
 
-👉 **[Quick Start (5 min)](INSTAGRAM_QUICK_START.md)** | **[Full Setup Guide](INSTAGRAM_SETUP.md)**
+👉 **[Quick Start (5 min)](docs/INSTAGRAM_QUICK_START.md)** | **[Full Setup Guide](docs/INSTAGRAM_SETUP.md)**
 
 ### 🔒 Privacy-First Design
 
@@ -122,9 +122,6 @@ npm run preview
 DebugYourFinance/
 ├── api/                    # Vercel serverless functions
 │   └── instagram.js       # Instagram API endpoint
-├── netlify/               # Netlify serverless functions
-│   └── functions/
-│       └── instagram.js   # Instagram API endpoint
 ├── public/                # Static assets
 ├── src/
 │   ├── components/        # React components
@@ -232,19 +229,14 @@ The app uses the following localStorage keys to persist user data:
 
 This app can be deployed to any static hosting service:
 
-### Vercel
+### Vercel (Recommended)
 
 ```bash
 npm install -g vercel
 vercel
 ```
 
-### Netlify
-
-```bash
-npm run build
-# Drag and drop the 'dist' folder to Netlify
-```
+**Note:** The `vercel.json` configuration ensures client-side routing works correctly for all routes.
 
 ### GitHub Pages
 
