@@ -12,7 +12,8 @@ import {
   SectionHeader,
   ComparisonCard,
   HighlightCard,
-  ChartContainer
+  ChartContainer,
+  CalculatorCard
 } from '../common';
 import {
   CALC_LOAN_DESC,
@@ -42,6 +43,9 @@ import {
   PLACEHOLDER_2L
 } from '../../constants/messages';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
+import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
+import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_DOT_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 
 export default function LoanTenureReducer() {
   const [principal, setPrincipal] = useLocalStorage('loan_principal', 5000000);
@@ -67,7 +71,7 @@ export default function LoanTenureReducer() {
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+    <CalculatorCard>
       <SectionHeader
         icon={Home}
         title="Loan Tenure Reducer"
@@ -136,7 +140,7 @@ export default function LoanTenureReducer() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: ANIMATION_DURATION_SLOW }}
         >
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -186,41 +190,41 @@ export default function LoanTenureReducer() {
           {/* Chart */}
           {results.yearlyData.length > 0 && (
             <ChartContainer title={LOAN_PRINCIPAL_REDUCTION}>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
                 <LineChart data={results.yearlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
+                  <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
                   <XAxis
                     dataKey="year"
-                    label={{ value: CHART_YEARS, position: 'insideBottom', offset: -5 }}
-                    tick={{ fill: '#64748b' }}
+                    label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
+                    tick={{ fill: COLOR_SLATE_500 }}
                     className="dark:fill-slate-400"
                   />
                   <YAxis
                     label={{ value: CHART_OUTSTANDING, angle: -90, position: 'insideLeft' }}
-                    tick={{ fill: '#64748b' }}
+                    tick={{ fill: COLOR_SLATE_500 }}
                     className="dark:fill-slate-400"
                     tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                   />
                   <Tooltip
                     formatter={(value) => formatCurrency(value)}
-                    contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
+                    contentStyle={CHART_TOOLTIP_STYLE}
                   />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="withoutPrepayment"
-                    stroke="#64748b"
-                    strokeWidth={2}
+                    stroke={COLOR_CHART_NEUTRAL}
+                    strokeWidth={CHART_STROKE_WIDTH}
                     name={CHART_WITHOUT_PREPAYMENT}
-                    dot={{ fill: '#64748b', r: 4 }}
+                    dot={{ fill: COLOR_CHART_NEUTRAL, r: CHART_DOT_RADIUS }}
                   />
                   <Line
                     type="monotone"
                     dataKey="withPrepayment"
-                    stroke="#10b981"
-                    strokeWidth={2}
+                    stroke={COLOR_CHART_PRIMARY}
+                    strokeWidth={CHART_STROKE_WIDTH}
                     name={CHART_WITH_PREPAYMENT}
-                    dot={{ fill: '#10b981', r: 4 }}
+                    dot={{ fill: COLOR_CHART_PRIMARY, r: CHART_DOT_RADIUS }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -228,6 +232,6 @@ export default function LoanTenureReducer() {
           )}
         </motion.div>
       )}
-    </div>
+    </CalculatorCard>
   );
 }

@@ -12,7 +12,8 @@ import {
   SectionHeader,
   AlertBanner,
   InfoBox,
-  ChartContainer
+  ChartContainer,
+  CalculatorCard
 } from '../common';
 import {
   CALC_SWP,
@@ -40,6 +41,9 @@ import {
   PLACEHOLDER_30K
 } from '../../constants/messages';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
+import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
+import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_DOT_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 
 export default function SWPCalculator() {
   const [lumpsumAmount, setLumpsumAmount] = useLocalStorage('swp_lumpsum', 5000000);
@@ -62,7 +66,7 @@ export default function SWPCalculator() {
   }, [lumpsumAmount, monthlyWithdrawal, expectedReturn, timePeriod, inflationEnabled, inflationRate]);
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+    <CalculatorCard>
       <SectionHeader
         icon={TrendingDown}
         title={CALC_SWP}
@@ -150,7 +154,7 @@ export default function SWPCalculator() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: ANIMATION_DURATION_SLOW }}
         >
           {/* Warning if corpus depletes */}
           {results.corpusDepleted && (
@@ -207,47 +211,47 @@ export default function SWPCalculator() {
             title={SWP_DEPLETION_TIMELINE}
             subtitle={inflationEnabled ? '(Inflation-Adjusted)' : ''}
           >
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
               <LineChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
+                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
                 <XAxis
                   dataKey="year"
-                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: -5 }}
-                  tick={{ fill: '#64748b' }}
+                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                 />
                 <YAxis
                   label={{ value: CHART_AMOUNT, angle: -90, position: 'insideLeft' }}
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                   tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
+                  contentStyle={CHART_TOOLTIP_STYLE}
                 />
                 <Legend />
                 <Line
                   type="monotone"
                   dataKey="corpus"
-                  stroke="#10b981"
-                  strokeWidth={2}
+                  stroke={COLOR_CHART_PRIMARY}
+                  strokeWidth={CHART_STROKE_WIDTH}
                   name={CHART_REMAINING_CORPUS}
-                  dot={{ fill: '#10b981' }}
+                  dot={{ fill: COLOR_CHART_PRIMARY }}
                 />
                 <Line
                   type="monotone"
                   dataKey="cumulativeWithdrawn"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
+                  stroke={COLOR_ACCENT_BLUE}
+                  strokeWidth={CHART_STROKE_WIDTH}
                   name={CHART_TOTAL_WITHDRAWN}
-                  dot={{ fill: '#3b82f6' }}
+                  dot={{ fill: COLOR_ACCENT_BLUE }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
         </motion.div>
       )}
-    </div>
+    </CalculatorCard>
   );
 }

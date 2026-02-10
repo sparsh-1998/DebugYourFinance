@@ -11,7 +11,8 @@ import {
   ComparisonCard,
   HighlightCard,
   ChartContainer,
-  InfoBox
+  InfoBox,
+  CalculatorCard
 } from '../common';
 import {
   CALC_RENT_VS_BUY,
@@ -55,6 +56,9 @@ import {
   PLACEHOLDER_10L
 } from '../../constants/messages';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
+import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
+import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_DOT_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 
 export default function RentVsBuyCalculator() {
   // Rent inputs
@@ -86,7 +90,7 @@ export default function RentVsBuyCalculator() {
   const loanAmount = homePrice - downPayment;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+    <CalculatorCard>
       <SectionHeader
         icon={Home}
         title={CALC_RENT_VS_BUY}
@@ -234,7 +238,7 @@ export default function RentVsBuyCalculator() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: ANIMATION_DURATION_SLOW }}
         >
           {/* Verdict */}
           <div className={`mb-6 p-4 rounded-lg border-2 flex items-center space-x-3 ${
@@ -323,41 +327,41 @@ export default function RentVsBuyCalculator() {
 
           {/* Net Worth Comparison Chart */}
           <ChartContainer title={RVB_NET_WORTH_COMPARISON} className="mb-6">
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
               <LineChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
+                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
                 <XAxis
                   dataKey="year"
-                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: -5 }}
-                  tick={{ fill: '#64748b' }}
+                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                 />
                 <YAxis
                   label={{ value: CHART_NET_WORTH, angle: -90, position: 'insideLeft' }}
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                   tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
+                  contentStyle={CHART_TOOLTIP_STYLE}
                 />
                 <Legend />
                 <Line
                   type="monotone"
                   dataKey="rentNetWorth"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
+                  stroke={COLOR_ACCENT_BLUE}
+                  strokeWidth={CHART_STROKE_WIDTH}
                   name={CHART_RENT_INVEST}
-                  dot={{ fill: '#3b82f6' }}
+                  dot={{ fill: COLOR_ACCENT_BLUE }}
                 />
                 <Line
                   type="monotone"
                   dataKey="buyNetWorth"
-                  stroke="#10b981"
-                  strokeWidth={2}
+                  stroke={COLOR_CHART_PRIMARY}
+                  strokeWidth={CHART_STROKE_WIDTH}
                   name={CHART_BUY_HOME}
-                  dot={{ fill: '#10b981' }}
+                  dot={{ fill: COLOR_CHART_PRIMARY }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -365,31 +369,31 @@ export default function RentVsBuyCalculator() {
 
           {/* Monthly Payment Comparison */}
           <ChartContainer title={RVB_CUMULATIVE_PAYMENTS}>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
               <BarChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
+                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
                 <XAxis
                   dataKey="year"
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                 />
                 <YAxis
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                   tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
+                  contentStyle={CHART_TOOLTIP_STYLE}
                 />
                 <Legend />
-                <Bar dataKey="cumulativeRent" fill="#3b82f6" name={CHART_TOTAL_RENT} radius={[4, 4, 0, 0]} />
-                <Bar dataKey="cumulativeEmi" fill="#10b981" name={CHART_TOTAL_EMI} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="cumulativeRent" fill={COLOR_ACCENT_BLUE} name={CHART_TOTAL_RENT} radius={CHART_BAR_RADIUS} />
+                <Bar dataKey="cumulativeEmi" fill={COLOR_CHART_PRIMARY} name={CHART_TOTAL_EMI} radius={CHART_BAR_RADIUS} />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
         </motion.div>
       )}
-    </div>
+    </CalculatorCard>
   );
 }

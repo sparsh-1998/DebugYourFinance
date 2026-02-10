@@ -15,3 +15,4 @@ export { default as ComparisonCard } from './ComparisonCard';
 export { default as HighlightCard } from './HighlightCard';
 export { default as Badge } from './Badge';
 export { default as Container } from './Container';
+export { default as CalculatorCard } from './CalculatorCard';

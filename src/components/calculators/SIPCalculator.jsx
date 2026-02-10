@@ -4,7 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { TrendingUp } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { calculateSIP, formatCurrency } from '../../utils/calculations';
-import { FormInput, RangeSlider, Toggle, ResultCard, SectionHeader, ChartContainer, InfoBox } from '../common';
+import { FormInput, RangeSlider, Toggle, ResultCard, SectionHeader, ChartContainer, InfoBox, CalculatorCard
+} from '../common';
 import {
   CALC_SIP,
   CALC_SIP_DESC,
@@ -27,6 +28,9 @@ import {
   VALIDATION_SIP
 } from '../../constants';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
+import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
+import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_DOT_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 
 export default function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useLocalStorage('sip_monthly', 10000);
@@ -47,7 +51,7 @@ export default function SIPCalculator() {
   }, [monthlyInvestment, expectedReturn, timePeriod, stepUpEnabled, stepUpPercentage]);
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+    <CalculatorCard>
       <SectionHeader
         icon={TrendingUp}
         title={CALC_SIP}
@@ -122,7 +126,7 @@ export default function SIPCalculator() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: ANIMATION_DURATION_SLOW }}
         >
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -149,28 +153,28 @@ export default function SIPCalculator() {
             title={SIP_GROWTH_PROJECTION}
             subtitle={stepUpEnabled ? CHART_SUBTITLE_STEP_UP : null}
           >
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
               <BarChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
+                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
                 <XAxis
                   dataKey="year"
-                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: -5 }}
-                  tick={{ fill: '#64748b' }}
+                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                 />
                 <YAxis
                   label={{ value: CHART_AMOUNT, angle: -90, position: 'insideLeft' }}
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                   tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
+                  contentStyle={CHART_TOOLTIP_STYLE}
                 />
                 <Legend />
-                <Bar dataKey="invested" fill="#64748b" name={SIP_INVESTED_AMOUNT} radius={[4, 4, 0, 0]} />
-                <Bar dataKey="wealth" fill="#10b981" name={SIP_WEALTH_GAINED} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="invested" fill={COLOR_CHART_NEUTRAL} name={SIP_INVESTED_AMOUNT} radius={CHART_BAR_RADIUS} />
+                <Bar dataKey="wealth" fill={COLOR_CHART_PRIMARY} name={SIP_WEALTH_GAINED} radius={CHART_BAR_RADIUS} />
               </BarChart>
             </ResponsiveContainer>
 
@@ -188,6 +192,6 @@ export default function SIPCalculator() {
           </ChartContainer>
         </motion.div>
       )}
-    </div>
+    </CalculatorCard>
   );
 }

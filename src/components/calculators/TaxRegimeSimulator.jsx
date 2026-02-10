@@ -10,6 +10,7 @@ import ComparisonCard from '../common/ComparisonCard';
 import AlertBanner from '../common/AlertBanner';
 import ChartContainer from '../common/ChartContainer';
 import InfoBox from '../common/InfoBox';
+import CalculatorCard from '../common/CalculatorCard';
 import {
   CALC_TAX,
   CALC_TAX_DESC,
@@ -41,6 +42,9 @@ import {
   PLACEHOLDER_2L,
   PLACEHOLDER_1L,
 } from '../../constants/messages';
+import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
+import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_DOT_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 
 export default function TaxRegimeSimulator() {
   const [income, setIncome] = useLocalStorage('tax_income', 1000000);
@@ -84,7 +88,7 @@ export default function TaxRegimeSimulator() {
   ] : [];
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+    <CalculatorCard>
       <SectionHeader
         icon={Receipt}
         title={CALC_TAX}
@@ -182,7 +186,7 @@ export default function TaxRegimeSimulator() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: ANIMATION_DURATION_SLOW }}
         >
           {/* Recommendation Banner */}
           <AlertBanner
@@ -269,27 +273,27 @@ export default function TaxRegimeSimulator() {
 
           {/* Chart */}
           <ChartContainer title={TAX_VISUAL_COMPARISON}>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
               <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
-                <XAxis dataKey="name" tick={{ fill: '#64748b' }} className="dark:fill-slate-400" />
+                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
+                <XAxis dataKey="name" tick={{ fill: COLOR_SLATE_500 }} className="dark:fill-slate-400" />
                 <YAxis
-                  tick={{ fill: '#64748b' }}
+                  tick={{ fill: COLOR_SLATE_500 }}
                   className="dark:fill-slate-400"
                   tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: '#1e293b', border: '2px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
+                  contentStyle={CHART_TOOLTIP_STYLE}
                 />
                 <Legend />
-                <Bar dataKey="old" fill="#64748b" name={CHART_OLD_REGIME} radius={[4, 4, 0, 0]} />
-                <Bar dataKey="new" fill="#10b981" name={CHART_NEW_REGIME} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="old" fill={COLOR_CHART_NEUTRAL} name={CHART_OLD_REGIME} radius={CHART_BAR_RADIUS} />
+                <Bar dataKey="new" fill={COLOR_CHART_PRIMARY} name={CHART_NEW_REGIME} radius={CHART_BAR_RADIUS} />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
         </motion.div>
       )}
-    </div>
+    </CalculatorCard>
   );
 }
