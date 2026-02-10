@@ -1,4 +1,5 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AdBanner from '../components/AdBanner';
 
@@ -19,7 +20,8 @@ function CalculatorLoader() {
 }
 
 export default function ToolsPage() {
-  const [activeTab, setActiveTab] = useState('sip');
+  const { toolId } = useParams();
+  const navigate = useNavigate();
 
   const tools = [
     { id: 'sip', name: 'SIP Calculator', component: SIPCalculator },
@@ -28,6 +30,28 @@ export default function ToolsPage() {
     { id: 'loan', name: 'Loan Reducer', component: LoanTenureReducer },
     { id: 'rent-vs-buy', name: 'Rent vs Buy', component: RentVsBuyCalculator },
   ];
+
+  const validToolIds = ['sip', 'swp', 'tax', 'loan', 'rent-vs-buy'];
+  const defaultTab = 'sip';
+
+  // Determine initial tab
+  const initialTab = toolId && validToolIds.includes(toolId) ? toolId : defaultTab;
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Handle URL changes and validation
+  useEffect(() => {
+    if (!toolId) {
+      // No toolId in URL - redirect to default
+      navigate(`/tools/${defaultTab}`, { replace: true });
+    } else if (!validToolIds.includes(toolId)) {
+      // Invalid toolId - redirect to default
+      navigate(`/tools/${defaultTab}`, { replace: true });
+    } else if (toolId !== activeTab) {
+      // Valid toolId different from current tab - update state
+      setActiveTab(toolId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolId, navigate]);
 
   const ActiveToolComponent = tools.find(t => t.id === activeTab)?.component;
 
@@ -49,7 +73,10 @@ export default function ToolsPage() {
             {tools.map((tool) => (
               <button
                 key={tool.id}
-                onClick={() => setActiveTab(tool.id)}
+                onClick={() => {
+                  setActiveTab(tool.id);
+                  navigate(`/tools/${tool.id}`);
+                }}
                 className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                   activeTab === tool.id
                     ? 'bg-accent text-white shadow-lg scale-105'
