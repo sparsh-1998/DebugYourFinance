@@ -328,14 +328,14 @@ export function calculateSWP(lumpsumAmount, monthlyWithdrawal, annualReturn, yea
 /**
  * Calculate Rent vs Buy comparison
  * @param {object} rentData - { monthlyRent, annualRentIncrease }
- * @param {object} buyData - { homePrice, downPayment, loanAmount, interestRate, loanTenure }
+ * @param {object} buyData - { homePrice, downPayment, loanAmount, interestRate, loanTenure, homeAppreciation }
  * @param {number} expectedReturn - Expected return on investment (%)
  * @param {number} years - Comparison period in years
  * @returns {object} - Comprehensive comparison data
  */
 export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
   const { monthlyRent, annualRentIncrease } = rentData;
-  const { homePrice, downPayment, loanAmount, interestRate, loanTenure } = buyData;
+  const { homePrice, downPayment, loanAmount, interestRate, loanTenure, homeAppreciation = 0 } = buyData;
 
   // Calculate monthly EMI for home loan
   const emi = calculateEMI(loanAmount, interestRate, loanTenure);
@@ -347,6 +347,7 @@ export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
   let totalEmiPaid = 0;
   let currentRent = monthlyRent;
   let loanBalance = loanAmount;
+  let currentHomeValue = homePrice;
 
   const yearlyData = [];
 
@@ -378,9 +379,12 @@ export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
       currentRent = currentRent * (1 + annualRentIncrease / 100);
     }
 
+    // Apply annual home appreciation
+    currentHomeValue = currentHomeValue * (1 + homeAppreciation / 100);
+
     // Calculate net worth for both scenarios
     const rentNetWorth = investmentCorpus; // Only investment corpus
-    const buyNetWorth = homePrice - loanBalance; // Home equity
+    const buyNetWorth = currentHomeValue - loanBalance; // Home equity with appreciation
 
     yearlyData.push({
       year,
@@ -389,7 +393,8 @@ export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
       cumulativeRent: Math.round(totalRentPaid),
       cumulativeEmi: Math.round(totalEmiPaid),
       investmentCorpus: Math.round(investmentCorpus),
-      homeEquity: Math.round(homePrice - loanBalance),
+      homeValue: Math.round(currentHomeValue),
+      homeEquity: Math.round(currentHomeValue - loanBalance),
       rentNetWorth: Math.round(rentNetWorth),
       buyNetWorth: Math.round(buyNetWorth),
       currentRent: Math.round(currentRent)
@@ -398,7 +403,7 @@ export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
 
   // Final comparison
   const rentScenarioValue = investmentCorpus;
-  const buyScenarioValue = homePrice - loanBalance; // Assuming home value remains same (conservative)
+  const buyScenarioValue = currentHomeValue - loanBalance; // Home value with appreciation
   const opportunityCost = investmentCorpus - downPayment; // Gains from investing down payment
 
   return {
@@ -406,7 +411,8 @@ export function calculateRentVsBuy(rentData, buyData, expectedReturn, years) {
     totalRentPaid: Math.round(totalRentPaid),
     totalEmiPaid: Math.round(totalEmiPaid),
     finalInvestmentCorpus: Math.round(investmentCorpus),
-    finalHomeEquity: Math.round(homePrice - loanBalance),
+    finalHomeValue: Math.round(currentHomeValue),
+    finalHomeEquity: Math.round(currentHomeValue - loanBalance),
     opportunityCost: Math.round(opportunityCost),
     rentScenarioNetWorth: Math.round(rentScenarioValue),
     buyScenarioNetWorth: Math.round(buyScenarioValue),

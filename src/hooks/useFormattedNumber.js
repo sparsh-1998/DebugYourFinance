@@ -11,8 +11,18 @@ import { formatIndianNumber } from '../utils/calculations';
 export function useFormattedNumber(value, setValue, options = {}) {
   const { min, max, allowDecimals = true, required = false } = options;
   const [error, setError] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
-  const formattedValue = formatIndianNumber(value);
+  // Update input value when external value changes (but not during editing)
+  useEffect(() => {
+    if (!isFocused) {
+      setInputValue(value === 0 ? '' : String(value));
+    }
+  }, [value, isFocused]);
+
+  // Show formatted value when not focused, raw input when focused
+  const displayValue = isFocused ? inputValue : formatIndianNumber(value);
 
   // Validate value whenever it changes
   useEffect(() => {
@@ -20,7 +30,7 @@ export function useFormattedNumber(value, setValue, options = {}) {
 
     if (required && value === 0) {
       errorMsg = 'This field is required';
-    } else if (min !== undefined && value < min) {
+    } else if (min !== undefined && value < min && value !== 0) {
       errorMsg = `Minimum value is ${formatIndianNumber(min)}`;
     } else if (max !== undefined && value > max) {
       errorMsg = `Maximum value is ${formatIndianNumber(max)}`;
@@ -31,6 +41,7 @@ export function useFormattedNumber(value, setValue, options = {}) {
 
   const handleChange = (e) => {
     const input = e.target.value;
+    setInputValue(input);
 
     // Remove all commas and non-numeric characters except decimal point
     let numericValue = input.replace(/[^0-9.]/g, '');
@@ -46,19 +57,43 @@ export function useFormattedNumber(value, setValue, options = {}) {
       numericValue = parts[0] + '.' + parts.slice(1).join('');
     }
 
-    // Convert to number, defaulting to 0 if empty or invalid
-    let parsedValue = numericValue === '' ? 0 : Number(numericValue);
-
-    // Apply constraints
-    if (min !== undefined && parsedValue < min) {
-      parsedValue = min;
+    // Allow empty input - only convert to number if not empty
+    if (numericValue === '') {
+      setValue(0);
+      return;
     }
+
+    let parsedValue = Number(numericValue);
+
+    // Only apply max constraint during typing (not min, to allow partial entry)
     if (max !== undefined && parsedValue > max) {
       parsedValue = max;
+      setInputValue(String(parsedValue));
     }
 
     setValue(parsedValue);
   };
 
-  return { formattedValue, handleChange, error, isValid: !error };
+  const handleFocus = () => {
+    setIsFocused(true);
+    setInputValue(value === 0 ? '' : String(value));
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+
+    // Apply min constraint on blur
+    if (min !== undefined && value < min && value !== 0) {
+      setValue(min);
+    }
+  };
+
+  return {
+    formattedValue: displayValue,
+    handleChange,
+    handleFocus,
+    handleBlur,
+    error,
+    isValid: !error
+  };
 }

@@ -66,6 +66,7 @@ export default function RentVsBuyCalculator() {
   const [downPayment, setDownPayment] = useLocalStorage('rvb_down_payment', 1000000);
   const [interestRate, setInterestRate] = useLocalStorage('rvb_interest_rate', 8.5);
   const [loanTenure, setLoanTenure] = useLocalStorage('rvb_loan_tenure', 20);
+  const [homeAppreciation, setHomeAppreciation] = useLocalStorage('rvb_home_appreciation', 5);
 
   // Investment return
   const [expectedReturn, setExpectedReturn] = useLocalStorage('rvb_return', 12);
@@ -76,11 +77,11 @@ export default function RentVsBuyCalculator() {
   useEffect(() => {
     const loanAmount = homePrice - downPayment;
     const rentData = { monthlyRent, annualRentIncrease };
-    const buyData = { homePrice, downPayment, loanAmount, interestRate, loanTenure };
+    const buyData = { homePrice, downPayment, loanAmount, interestRate, loanTenure, homeAppreciation };
 
     const calculated = calculateRentVsBuy(rentData, buyData, expectedReturn, timePeriod);
     setResults(calculated);
-  }, [monthlyRent, annualRentIncrease, homePrice, downPayment, interestRate, loanTenure, expectedReturn, timePeriod]);
+  }, [monthlyRent, annualRentIncrease, homePrice, downPayment, interestRate, loanTenure, homeAppreciation, expectedReturn, timePeriod]);
 
   const loanAmount = homePrice - downPayment;
 
@@ -175,6 +176,17 @@ export default function RentVsBuyCalculator() {
               max={30}
               step={1}
               unit={UNIT_YEARS}
+            />
+
+            {/* Home Appreciation */}
+            <RangeSlider
+              label="Home Appreciation Rate"
+              value={homeAppreciation}
+              onChange={setHomeAppreciation}
+              min={0}
+              max={15}
+              step={0.5}
+              unit={UNIT_PERCENT}
             />
           </div>
         </div>

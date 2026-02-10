@@ -12,7 +12,7 @@ export default function FormInput({
   placeholder = '',
   className = ''
 }) {
-  const { formattedValue, handleChange, error } = useFormattedNumber(
+  const { formattedValue, handleChange, handleFocus, handleBlur, error } = useFormattedNumber(
     value,
     setValue,
     validation
@@ -28,6 +28,8 @@ export default function FormInput({
         type="text"
         value={formattedValue}
         onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none transition-colors
           bg-white dark:bg-slate-800 text-slate-900 dark:text-white
           placeholder:text-slate-400 dark:placeholder:text-slate-500 ${
