@@ -1,11 +1,22 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import SIPCalculator from '../components/SIPCalculator';
-import TaxRegimeSimulator from '../components/TaxRegimeSimulator';
-import LoanTenureReducer from '../components/LoanTenureReducer';
-import SWPCalculator from '../components/SWPCalculator';
-import RentVsBuyCalculator from '../components/RentVsBuyCalculator';
 import AdBanner from '../components/AdBanner';
+
+// Lazy load calculator components (they contain heavy Recharts charts)
+const SIPCalculator = lazy(() => import('../components/SIPCalculator'));
+const SWPCalculator = lazy(() => import('../components/SWPCalculator'));
+const TaxRegimeSimulator = lazy(() => import('../components/TaxRegimeSimulator'));
+const LoanTenureReducer = lazy(() => import('../components/LoanTenureReducer'));
+const RentVsBuyCalculator = lazy(() => import('../components/RentVsBuyCalculator'));
+
+// Loading spinner for calculators
+function CalculatorLoader() {
+  return (
+    <div className="flex items-center justify-center py-20">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+    </div>
+  );
+}
 
 export default function ToolsPage() {
   const [activeTab, setActiveTab] = useState('sip');
@@ -56,14 +67,16 @@ export default function ToolsPage() {
           </div>
 
           {/* Active Calculator */}
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            {ActiveToolComponent && <ActiveToolComponent />}
-          </motion.div>
+          <Suspense fallback={<CalculatorLoader />}>
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {ActiveToolComponent && <ActiveToolComponent />}
+            </motion.div>
+          </Suspense>
 
           {/* Ad Banner Below Calculator */}
           <div className="mt-8">
