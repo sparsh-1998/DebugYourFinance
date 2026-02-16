@@ -239,8 +239,8 @@ export default function SIPCalculator() {
 
           <NoteBox type="note">
             The power of SIP lies in consistency and time, not timing the market. Stay invested for at least 5-7 years
-            to ride out market volatility. Historical data shows that equity SIPs have never given negative returns over 10+ year periods.
-            Start today, even with a small amount!
+            to ride out market volatility. Historical data shows that equity SIPs have generally delivered positive returns
+            with average returns of 12-15% over 10+ year periods. Start today, even with a small amount!
           </NoteBox>
         </AnalysisSection>
       </div>

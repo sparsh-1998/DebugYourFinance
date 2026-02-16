@@ -295,8 +295,8 @@ export default function SWPCalculator() {
 
           <NoteBox type="warning">
             Always enable inflation-adjusted withdrawals for realistic planning. What seems like enough today won't be
-            sufficient in 10-20 years. Follow the 4% rule - your annual withdrawal should ideally not exceed 4% of your corpus.
-            Keep a safety buffer of 20-30% for medical emergencies and unexpected expenses.
+            sufficient in 10-20 years. Follow the 4% rule (experts now suggest 3.7-3.9% for 2026) - your annual withdrawal
+            should ideally not exceed 4% of your corpus. Keep a safety buffer of 20-30% for medical emergencies and unexpected expenses.
           </NoteBox>
         </AnalysisSection>
       </div>
