@@ -1,9 +1,13 @@
+import PropTypes from 'prop-types';
 import { createContext, useContext, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
+  ThemeProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
   const [theme, setTheme] = useLocalStorage('theme', 'light');
 
   useEffect(() => {

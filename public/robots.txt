@@ -1,9 +1,7 @@
-# Allow all search engines to crawl the entire site
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://debugyourfinance.com/sitemap.xml
+# Disallow admin or private pages (if any in future)
+# Disallow: /admin
 
-# Crawl-delay (optional - helps prevent server overload)
-Crawl-delay: 1
+Sitemap: https://debugyourfinance.com/sitemap.xml

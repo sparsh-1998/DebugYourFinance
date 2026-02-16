@@ -2,23 +2,15 @@ import { useState, lazy, Suspense, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { CalculatorSkeleton } from '../components/common';
 import AdBanner from '../components/features/AdBanner';
 
-// Lazy load calculator components (they contain heavy Recharts charts)
+// Lazy load calculator components
 const SIPCalculator = lazy(() => import('../components/calculators/SIPCalculator'));
 const SWPCalculator = lazy(() => import('../components/calculators/SWPCalculator'));
 const TaxRegimeSimulator = lazy(() => import('../components/calculators/TaxRegimeSimulator'));
 const LoanTenureReducer = lazy(() => import('../components/calculators/LoanTenureReducer'));
 const RentVsBuyCalculator = lazy(() => import('../components/calculators/RentVsBuyCalculator'));
-
-// Loading spinner for calculators
-function CalculatorLoader() {
-  return (
-    <div className="flex items-center justify-center py-20">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
-    </div>
-  );
-}
 
 export default function ToolsPage() {
   const { toolId } = useParams();
@@ -35,28 +27,24 @@ export default function ToolsPage() {
   const validToolIds = ['sip', 'swp', 'tax', 'loan', 'rent-vs-buy'];
   const defaultTab = 'sip';
 
-  // Determine initial tab
   const initialTab = toolId && validToolIds.includes(toolId) ? toolId : defaultTab;
   const [activeTab, setActiveTab] = useState(initialTab);
 
-  // Handle URL changes and validation
+  // Handle URL changes
   useEffect(() => {
     if (!toolId) {
-      // No toolId in URL - redirect to default
       navigate(`/tools/${defaultTab}`, { replace: true });
     } else if (!validToolIds.includes(toolId)) {
-      // Invalid toolId - redirect to default
       navigate(`/tools/${defaultTab}`, { replace: true });
     } else if (toolId !== activeTab) {
-      // Valid toolId different from current tab - update state
       setActiveTab(toolId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolId, navigate]);
 
+
   const ActiveToolComponent = tools.find(t => t.id === activeTab)?.component;
 
-  // Dynamic meta data for each tool
   const toolMetaData = {
     sip: {
       title: 'SIP Calculator - Plan Your Systematic Investment | DebugYourFinance',
@@ -82,7 +70,6 @@ export default function ToolsPage() {
 
   const currentToolMeta = toolMetaData[activeTab] || toolMetaData.sip;
 
-  // JSON-LD structured data for each tool
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -147,13 +134,11 @@ export default function ToolsPage() {
             ))}
           </div>
 
-          {/* Ad Banner Above Calculator */}
           <div className="mb-8">
             <AdBanner />
           </div>
 
-          {/* Active Calculator */}
-          <Suspense fallback={<CalculatorLoader />}>
+          <Suspense fallback={<CalculatorSkeleton />}>
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, x: 20 }}
@@ -164,7 +149,6 @@ export default function ToolsPage() {
             </motion.div>
           </Suspense>
 
-          {/* Ad Banner Below Calculator */}
           <div className="mt-8">
             <AdBanner />
           </div>
