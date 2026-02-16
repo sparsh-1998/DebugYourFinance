@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Home, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { calculateRentVsBuy, formatCurrency } from '../../utils/calculations';
@@ -9,14 +8,14 @@ import {
   RangeSlider,
   SectionHeader,
   ComparisonCard,
-  HighlightCard,
-  ChartContainer,
   InfoBox,
   CalculatorCard,
   HowToUseSection,
   FAQSection,
   AnalysisSection,
-  NoteBox
+  NoteBox,
+  StandardBarChart,
+  StandardLineChart
 } from '../common';
 import {
   CALC_RENT_VS_BUY,
@@ -46,7 +45,6 @@ import {
   RVB_EXPECTED_RETURN_DESC,
   RVB_NET_WORTH_COMPARISON,
   RVB_CUMULATIVE_PAYMENTS,
-  CHART_YEARS,
   CHART_NET_WORTH,
   CHART_RENT_INVEST,
   CHART_BUY_HOME,
@@ -60,8 +58,7 @@ import {
   PLACEHOLDER_10L
 } from '../../constants/messages';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
-import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
-import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
 import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 import {
   RENT_VS_BUY_HOW_TO_USE,
@@ -84,18 +81,17 @@ export default function RentVsBuyCalculator() {
   const [expectedReturn, setExpectedReturn] = useLocalStorage('rvb_return', 12);
   const [timePeriod, setTimePeriod] = useLocalStorage('rvb_years', 20);
 
-  const [results, setResults] = useState(null);
+  // Memoize loan amount calculation
+  const loanAmount = useMemo(() => {
+    return homePrice - downPayment;
+  }, [homePrice, downPayment]);
 
-  useEffect(() => {
-    const loanAmount = homePrice - downPayment;
+  // Memoize rent vs buy calculation
+  const results = useMemo(() => {
     const rentData = { monthlyRent, annualRentIncrease };
     const buyData = { homePrice, downPayment, loanAmount, interestRate, loanTenure, homeAppreciation };
-
-    const calculated = calculateRentVsBuy(rentData, buyData, expectedReturn, timePeriod);
-    setResults(calculated);
-  }, [monthlyRent, annualRentIncrease, homePrice, downPayment, interestRate, loanTenure, homeAppreciation, expectedReturn, timePeriod]);
-
-  const loanAmount = homePrice - downPayment;
+    return calculateRentVsBuy(rentData, buyData, expectedReturn, timePeriod);
+  }, [monthlyRent, annualRentIncrease, homePrice, downPayment, loanAmount, interestRate, loanTenure, homeAppreciation, expectedReturn, timePeriod]);
 
   return (
     <CalculatorCard>
@@ -334,72 +330,25 @@ export default function RentVsBuyCalculator() {
           </InfoBox>
 
           {/* Net Worth Comparison Chart */}
-          <ChartContainer title={RVB_NET_WORTH_COMPARISON} className="mb-6">
-            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
-                <XAxis
-                  dataKey="year"
-                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                />
-                <YAxis
-                  label={{ value: CHART_NET_WORTH, angle: -90, position: 'insideLeft' }}
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                  tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
-                />
-                <Tooltip
-                  formatter={(value) => formatCurrency(value)}
-                  contentStyle={CHART_TOOLTIP_STYLE}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="rentNetWorth"
-                  stroke={COLOR_ACCENT_BLUE}
-                  strokeWidth={CHART_STROKE_WIDTH}
-                  name={CHART_RENT_INVEST}
-                  dot={{ fill: COLOR_ACCENT_BLUE }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="buyNetWorth"
-                  stroke={COLOR_CHART_PRIMARY}
-                  strokeWidth={CHART_STROKE_WIDTH}
-                  name={CHART_BUY_HOME}
-                  dot={{ fill: COLOR_CHART_PRIMARY }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <StandardLineChart
+            data={results.yearlyData}
+            lines={[
+              { dataKey: 'rentNetWorth', stroke: COLOR_ACCENT_BLUE, name: CHART_RENT_INVEST },
+              { dataKey: 'buyNetWorth', stroke: COLOR_CHART_PRIMARY, name: CHART_BUY_HOME }
+            ]}
+            title={RVB_NET_WORTH_COMPARISON}
+            yLabel={CHART_NET_WORTH}
+          />
 
           {/* Monthly Payment Comparison */}
-          <ChartContainer title={RVB_CUMULATIVE_PAYMENTS}>
-            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <BarChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
-                <XAxis
-                  dataKey="year"
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                />
-                <YAxis
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                  tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
-                />
-                <Tooltip
-                  formatter={(value) => formatCurrency(value)}
-                  contentStyle={CHART_TOOLTIP_STYLE}
-                />
-                <Legend />
-                <Bar dataKey="cumulativeRent" fill={COLOR_ACCENT_BLUE} name={CHART_TOTAL_RENT} radius={CHART_BAR_RADIUS} />
-                <Bar dataKey="cumulativeEmi" fill={COLOR_CHART_PRIMARY} name={CHART_TOTAL_EMI} radius={CHART_BAR_RADIUS} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <StandardBarChart
+            data={results.yearlyData}
+            bars={[
+              { dataKey: 'cumulativeRent', fill: COLOR_ACCENT_BLUE, name: CHART_TOTAL_RENT },
+              { dataKey: 'cumulativeEmi', fill: COLOR_CHART_PRIMARY, name: CHART_TOTAL_EMI }
+            ]}
+            title={RVB_CUMULATIVE_PAYMENTS}
+          />
         </motion.div>
       )}
 

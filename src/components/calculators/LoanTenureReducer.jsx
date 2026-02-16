@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Home, TrendingDown } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { calculateEMI, calculatePrepaymentImpact, formatCurrency } from '../../utils/calculations';
@@ -12,14 +11,14 @@ import {
   SectionHeader,
   ComparisonCard,
   HighlightCard,
-  ChartContainer,
   CalculatorCard,
   HowToUseSection,
   FAQSection,
   AnalysisSection,
   FormulaBox,
   VariableList,
-  NoteBox
+  NoteBox,
+  StandardLineChart
 } from '../common';
 import {
   CALC_LOAN_DESC,
@@ -41,7 +40,6 @@ import {
   LOAN_TENURE_REDUCED,
   LOAN_INTEREST_SAVED,
   LOAN_PRINCIPAL_REDUCTION,
-  CHART_YEARS,
   CHART_OUTSTANDING,
   CHART_WITHOUT_PREPAYMENT,
   CHART_WITH_PREPAYMENT,
@@ -49,8 +47,7 @@ import {
   PLACEHOLDER_2L
 } from '../../constants/messages';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
-import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
-import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_BAR_RADIUS, CHART_DOT_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
 import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 import {
   LOAN_HOW_TO_USE,
@@ -63,15 +60,15 @@ export default function LoanTenureReducer() {
   const [tenure, setTenure] = useLocalStorage('loan_tenure', 20);
   const [prepayment, setPrepayment] = useLocalStorage('loan_prepayment', 100000);
   const [frequency, setFrequency] = useLocalStorage('loan_frequency', 'annual');
-  const [emi, setEmi] = useState(0);
-  const [results, setResults] = useState(null);
 
-  useEffect(() => {
-    const calculatedEmi = calculateEMI(principal, annualRate, tenure);
-    setEmi(calculatedEmi);
+  // Memoize EMI calculation
+  const emi = useMemo(() => {
+    return calculateEMI(principal, annualRate, tenure);
+  }, [principal, annualRate, tenure]);
 
-    const impact = calculatePrepaymentImpact(principal, annualRate, tenure, prepayment, frequency);
-    setResults(impact);
+  // Memoize prepayment impact calculation
+  const results = useMemo(() => {
+    return calculatePrepaymentImpact(principal, annualRate, tenure, prepayment, frequency);
   }, [principal, annualRate, tenure, prepayment, frequency]);
 
   const frequencyOptions = [
@@ -199,46 +196,15 @@ export default function LoanTenureReducer() {
 
           {/* Chart */}
           {results.yearlyData.length > 0 && (
-            <ChartContainer title={LOAN_PRINCIPAL_REDUCTION}>
-              <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-                <LineChart data={results.yearlyData}>
-                  <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
-                  <XAxis
-                    dataKey="year"
-                    label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
-                    tick={{ fill: COLOR_SLATE_500 }}
-                    className="dark:fill-slate-400"
-                  />
-                  <YAxis
-                    label={{ value: CHART_OUTSTANDING, angle: -90, position: 'insideLeft' }}
-                    tick={{ fill: COLOR_SLATE_500 }}
-                    className="dark:fill-slate-400"
-                    tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
-                  />
-                  <Tooltip
-                    formatter={(value) => formatCurrency(value)}
-                    contentStyle={CHART_TOOLTIP_STYLE}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="withoutPrepayment"
-                    stroke={COLOR_CHART_NEUTRAL}
-                    strokeWidth={CHART_STROKE_WIDTH}
-                    name={CHART_WITHOUT_PREPAYMENT}
-                    dot={{ fill: COLOR_CHART_NEUTRAL, r: CHART_DOT_RADIUS }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="withPrepayment"
-                    stroke={COLOR_CHART_PRIMARY}
-                    strokeWidth={CHART_STROKE_WIDTH}
-                    name={CHART_WITH_PREPAYMENT}
-                    dot={{ fill: COLOR_CHART_PRIMARY, r: CHART_DOT_RADIUS }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <StandardLineChart
+              data={results.yearlyData}
+              lines={[
+                { dataKey: 'withoutPrepayment', stroke: COLOR_CHART_NEUTRAL, name: CHART_WITHOUT_PREPAYMENT },
+                { dataKey: 'withPrepayment', stroke: COLOR_CHART_PRIMARY, name: CHART_WITH_PREPAYMENT }
+              ]}
+              title={LOAN_PRINCIPAL_REDUCTION}
+              yLabel={CHART_OUTSTANDING}
+            />
           )}
         </motion.div>
       )}

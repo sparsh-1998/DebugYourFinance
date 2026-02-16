@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Receipt } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { calculateTax, formatCurrency, TAX_SLABS } from '../../utils/calculations';
@@ -9,13 +8,13 @@ import {
   SectionHeader,
   ComparisonCard,
   AlertBanner,
-  ChartContainer,
   InfoBox,
   CalculatorCard,
   HowToUseSection,
   FAQSection,
   AnalysisSection,
-  NoteBox
+  NoteBox,
+  StandardBarChart
 } from '../common';
 import {
   CALC_TAX,
@@ -48,8 +47,7 @@ import {
   PLACEHOLDER_2L,
   PLACEHOLDER_1L,
 } from '../../constants/messages';
-import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
-import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_BAR_RADIUS, CHART_HEIGHT } from '../../constants/chartStyles';
+import { COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
 import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 import {
   TAX_HOW_TO_USE,
@@ -65,37 +63,42 @@ export default function TaxRegimeSimulator() {
   const [npsEmployer, setNpsEmployer] = useLocalStorage('tax_nps_employer', 0);
   const [otherDeductions, setOtherDeductions] = useLocalStorage('tax_other_deductions', 0);
 
-  const [oldRegimeResult, setOldRegimeResult] = useState(null);
-  const [newRegimeResult, setNewRegimeResult] = useState(null);
-  const [savings, setSavings] = useState(0);
-
-  useEffect(() => {
+  // Memoize tax calculations for old regime
+  const oldRegimeResult = useMemo(() => {
     const deductions = { section80C, section80D, hra, npsPersonal, npsEmployer, otherDeductions };
-    const oldResult = calculateTax(income, deductions, 'old');
-    const newResult = calculateTax(income, {}, 'new');
-
-    setOldRegimeResult(oldResult);
-    setNewRegimeResult(newResult);
-    setSavings(newResult.tax - oldResult.tax);
+    return calculateTax(income, deductions, 'old');
   }, [income, section80C, section80D, hra, npsPersonal, npsEmployer, otherDeductions]);
 
-  const comparisonData = oldRegimeResult && newRegimeResult ? [
-    {
-      name: 'Taxable Income',
-      old: oldRegimeResult.taxableIncome,
-      new: newRegimeResult.taxableIncome
-    },
-    {
-      name: 'Tax Payable',
-      old: oldRegimeResult.tax,
-      new: newRegimeResult.tax
-    },
-    {
-      name: 'Take-home',
-      old: oldRegimeResult.takehome,
-      new: newRegimeResult.takehome
-    }
-  ] : [];
+  // Memoize tax calculations for new regime
+  const newRegimeResult = useMemo(() => {
+    return calculateTax(income, {}, 'new');
+  }, [income]);
+
+  // Memoize savings calculation
+  const savings = useMemo(() => {
+    return newRegimeResult.tax - oldRegimeResult.tax;
+  }, [oldRegimeResult, newRegimeResult]);
+
+  // Memoize comparison data for chart
+  const comparisonData = useMemo(() => {
+    return [
+      {
+        name: 'Taxable Income',
+        old: oldRegimeResult.taxableIncome,
+        new: newRegimeResult.taxableIncome
+      },
+      {
+        name: 'Tax Payable',
+        old: oldRegimeResult.tax,
+        new: newRegimeResult.tax
+      },
+      {
+        name: 'Take-home',
+        old: oldRegimeResult.takehome,
+        new: newRegimeResult.takehome
+      }
+    ];
+  }, [oldRegimeResult, newRegimeResult]);
 
   return (
     <CalculatorCard>
@@ -282,26 +285,15 @@ export default function TaxRegimeSimulator() {
           </div>
 
           {/* Chart */}
-          <ChartContainer title={TAX_VISUAL_COMPARISON}>
-            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
-                <XAxis dataKey="name" tick={{ fill: COLOR_SLATE_500 }} className="dark:fill-slate-400" />
-                <YAxis
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                  tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
-                />
-                <Tooltip
-                  formatter={(value) => formatCurrency(value)}
-                  contentStyle={CHART_TOOLTIP_STYLE}
-                />
-                <Legend />
-                <Bar dataKey="old" fill={COLOR_CHART_NEUTRAL} name={CHART_OLD_REGIME} radius={CHART_BAR_RADIUS} />
-                <Bar dataKey="new" fill={COLOR_CHART_PRIMARY} name={CHART_NEW_REGIME} radius={CHART_BAR_RADIUS} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <StandardBarChart
+            data={comparisonData}
+            bars={[
+              { dataKey: 'old', fill: COLOR_CHART_NEUTRAL, name: CHART_OLD_REGIME },
+              { dataKey: 'new', fill: COLOR_CHART_PRIMARY, name: CHART_NEW_REGIME }
+            ]}
+            title={TAX_VISUAL_COMPARISON}
+            xKey="name"
+          />
         </motion.div>
       )}
 

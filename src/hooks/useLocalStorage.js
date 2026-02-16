@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Custom hook for syncing state with localStorage
@@ -18,13 +18,27 @@ export function useLocalStorage(key, initialValue) {
     }
   });
 
-  // Update localStorage when state changes
+  const timeoutRef = useRef(null);
+
+  // Debounce localStorage writes by 300ms to prevent blocking main thread
   useEffect(() => {
-    try {
-      window.localStorage.setItem(key, JSON.stringify(storedValue));
-    } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
+
+    timeoutRef.current = setTimeout(() => {
+      try {
+        window.localStorage.setItem(key, JSON.stringify(storedValue));
+      } catch (error) {
+        console.error(`Error setting localStorage key "${key}":`, error);
+      }
+    }, 300);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [key, storedValue]);
 
   return [storedValue, setStoredValue];

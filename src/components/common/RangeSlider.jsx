@@ -1,10 +1,12 @@
+import { useId, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useTheme } from '../../contexts/ThemeContext';
 import { COLOR_ACCENT_GREEN, COLOR_DARK_TRACK, COLOR_LIGHT_TRACK } from '../../constants/colors';
 
 /**
  * Reusable range slider component with label and value display
  */
-export default function RangeSlider({
+function RangeSlider({
   label,
   value,
   onChange,
@@ -14,27 +16,27 @@ export default function RangeSlider({
   unit = '',
   className = ''
 }) {
+  const id = useId();
   const { theme } = useTheme();
 
-  // Calculate percentage for gradient
-  const percentage = ((value - min) / (max - min)) * 100;
-
-  // Define colors based on theme
-  const accentColor = COLOR_ACCENT_GREEN;
-  const trackColor = theme === 'dark' ? COLOR_DARK_TRACK : COLOR_LIGHT_TRACK;
-
-  // Create gradient background showing filled portion in green
-  const backgroundStyle = {
-    background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} ${percentage}%, ${trackColor} ${percentage}%, ${trackColor} 100%)`
-  };
+  // Memoize gradient background calculation for performance
+  const backgroundStyle = useMemo(() => {
+    const percentage = ((value - min) / (max - min)) * 100;
+    const accentColor = COLOR_ACCENT_GREEN;
+    const trackColor = theme === 'dark' ? COLOR_DARK_TRACK : COLOR_LIGHT_TRACK;
+    return {
+      background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} ${percentage}%, ${trackColor} ${percentage}%, ${trackColor} 100%)`
+    };
+  }, [value, min, max, theme]);
 
   return (
     <div className={className}>
-      <label className="flex justify-between items-center mb-2">
+      <label htmlFor={id} className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</span>
         <span className="text-lg font-semibold text-accent">{value}{unit}</span>
       </label>
       <input
+        id={id}
         type="range"
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
@@ -43,6 +45,12 @@ export default function RangeSlider({
         min={min}
         max={max}
         step={step}
+        aria-label={label}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        aria-valuetext={`${value}${unit}`}
+        role="slider"
       />
       <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
         <span>{min}{unit}</span>
@@ -51,3 +59,16 @@ export default function RangeSlider({
     </div>
   );
 }
+
+RangeSlider.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  step: PropTypes.number,
+  unit: PropTypes.string,
+  className: PropTypes.string
+};
+
+export default RangeSlider;

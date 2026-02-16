@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingDown } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { calculateSWP, formatCurrency } from '../../utils/calculations';
@@ -12,14 +11,14 @@ import {
   SectionHeader,
   AlertBanner,
   InfoBox,
-  ChartContainer,
   CalculatorCard,
   HowToUseSection,
   FAQSection,
   AnalysisSection,
   FormulaBox,
   VariableList,
-  NoteBox
+  NoteBox,
+  StandardLineChart
 } from '../common';
 import {
   CALC_SWP,
@@ -39,16 +38,13 @@ import {
   SWP_FINAL_CORPUS,
   SWP_DEPLETION_TIMELINE,
   SWP_INFLATION_IMPACT,
-  CHART_YEARS,
-  CHART_AMOUNT,
   CHART_REMAINING_CORPUS,
   CHART_TOTAL_WITHDRAWN,
   PLACEHOLDER_50L,
   PLACEHOLDER_30K
 } from '../../constants/messages';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
-import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
-import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
 import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 import {
   SWP_HOW_TO_USE,
@@ -62,17 +58,16 @@ export default function SWPCalculator() {
   const [timePeriod, setTimePeriod] = useLocalStorage('swp_years', 20);
   const [inflationEnabled, setInflationEnabled] = useLocalStorage('swp_inflation_enabled', false);
   const [inflationRate, setInflationRate] = useLocalStorage('swp_inflation_rate', 6);
-  const [results, setResults] = useState(null);
 
-  useEffect(() => {
-    const calculated = calculateSWP(
+  // Memoize calculation results to prevent unnecessary recalculations
+  const results = useMemo(() => {
+    return calculateSWP(
       lumpsumAmount,
       monthlyWithdrawal,
       expectedReturn,
       timePeriod,
       inflationEnabled ? inflationRate : 0
     );
-    setResults(calculated);
   }, [lumpsumAmount, monthlyWithdrawal, expectedReturn, timePeriod, inflationEnabled, inflationRate]);
 
   return (
@@ -217,49 +212,15 @@ export default function SWPCalculator() {
           )}
 
           {/* Chart */}
-          <ChartContainer
+          <StandardLineChart
+            data={results.yearlyData}
+            lines={[
+              { dataKey: 'corpus', stroke: COLOR_CHART_PRIMARY, name: CHART_REMAINING_CORPUS },
+              { dataKey: 'cumulativeWithdrawn', stroke: COLOR_ACCENT_BLUE, name: CHART_TOTAL_WITHDRAWN }
+            ]}
             title={SWP_DEPLETION_TIMELINE}
-            subtitle={inflationEnabled ? '(Inflation-Adjusted)' : ''}
-          >
-            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
-                <XAxis
-                  dataKey="year"
-                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                />
-                <YAxis
-                  label={{ value: CHART_AMOUNT, angle: -90, position: 'insideLeft' }}
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                  tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
-                />
-                <Tooltip
-                  formatter={(value) => formatCurrency(value)}
-                  contentStyle={CHART_TOOLTIP_STYLE}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="corpus"
-                  stroke={COLOR_CHART_PRIMARY}
-                  strokeWidth={CHART_STROKE_WIDTH}
-                  name={CHART_REMAINING_CORPUS}
-                  dot={{ fill: COLOR_CHART_PRIMARY }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="cumulativeWithdrawn"
-                  stroke={COLOR_ACCENT_BLUE}
-                  strokeWidth={CHART_STROKE_WIDTH}
-                  name={CHART_TOTAL_WITHDRAWN}
-                  dot={{ fill: COLOR_ACCENT_BLUE }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+            subtitle={inflationEnabled ? '(Inflation-Adjusted)' : null}
+          />
         </motion.div>
       )}
 

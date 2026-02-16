@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { calculateSIP, formatCurrency } from '../../utils/calculations';
@@ -10,7 +9,6 @@ import {
   Toggle,
   ResultCard,
   SectionHeader,
-  ChartContainer,
   InfoBox,
   CalculatorCard,
   HowToUseSection,
@@ -18,7 +16,8 @@ import {
   AnalysisSection,
   FormulaBox,
   VariableList,
-  NoteBox
+  NoteBox,
+  StandardBarChart
 } from '../common';
 import {
   CALC_SIP,
@@ -36,14 +35,11 @@ import {
   SIP_FUTURE_VALUE,
   SIP_GROWTH_PROJECTION,
   SIP_STEPUP_NOTE,
-  CHART_YEARS,
-  CHART_AMOUNT,
   CHART_SUBTITLE_STEP_UP,
   VALIDATION_SIP
 } from '../../constants';
 import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
-import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
-import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_BAR_RADIUS, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
+import { COLOR_CHART_PRIMARY, COLOR_CHART_NEUTRAL } from '../../constants/colors';
 import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
 import {
   SIP_HOW_TO_USE,
@@ -56,16 +52,15 @@ export default function SIPCalculator() {
   const [timePeriod, setTimePeriod] = useLocalStorage('sip_years', 10);
   const [stepUpEnabled, setStepUpEnabled] = useLocalStorage('sip_stepup_enabled', false);
   const [stepUpPercentage, setStepUpPercentage] = useLocalStorage('sip_stepup_percentage', 10);
-  const [results, setResults] = useState(null);
 
-  useEffect(() => {
-    const calculated = calculateSIP(
+  // Memoize calculation results to prevent unnecessary recalculations
+  const results = useMemo(() => {
+    return calculateSIP(
       monthlyInvestment,
       expectedReturn,
       timePeriod,
       stepUpEnabled ? stepUpPercentage : 0
     );
-    setResults(calculated);
   }, [monthlyInvestment, expectedReturn, timePeriod, stepUpEnabled, stepUpPercentage]);
 
   return (
@@ -167,47 +162,27 @@ export default function SIPCalculator() {
           </div>
 
           {/* Chart */}
-          <ChartContainer
+          <StandardBarChart
+            data={results.yearlyData}
+            bars={[
+              { dataKey: 'invested', fill: COLOR_CHART_NEUTRAL, name: SIP_INVESTED_AMOUNT },
+              { dataKey: 'wealth', fill: COLOR_CHART_PRIMARY, name: SIP_WEALTH_GAINED }
+            ]}
             title={SIP_GROWTH_PROJECTION}
             subtitle={stepUpEnabled ? CHART_SUBTITLE_STEP_UP : null}
-          >
-            <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <BarChart data={results.yearlyData}>
-                <CartesianGrid strokeDasharray={CHART_STROKE_DASHARRAY} stroke={COLOR_CHART_GRID} className="dark:stroke-slate-600" />
-                <XAxis
-                  dataKey="year"
-                  label={{ value: CHART_YEARS, position: 'insideBottom', offset: CHART_LABEL_OFFSET }}
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                />
-                <YAxis
-                  label={{ value: CHART_AMOUNT, angle: -90, position: 'insideLeft' }}
-                  tick={{ fill: COLOR_SLATE_500 }}
-                  className="dark:fill-slate-400"
-                  tickFormatter={(value) => `${(value / 100000).toFixed(1)}L`}
-                />
-                <Tooltip
-                  formatter={(value) => formatCurrency(value)}
-                  contentStyle={CHART_TOOLTIP_STYLE}
-                />
-                <Legend />
-                <Bar dataKey="invested" fill={COLOR_CHART_NEUTRAL} name={SIP_INVESTED_AMOUNT} radius={CHART_BAR_RADIUS} />
-                <Bar dataKey="wealth" fill={COLOR_CHART_PRIMARY} name={SIP_WEALTH_GAINED} radius={CHART_BAR_RADIUS} />
-              </BarChart>
-            </ResponsiveContainer>
+          />
 
-            {/* Step-Up Info */}
-            {stepUpEnabled && results.yearlyData.length > 0 && (
-              <InfoBox variant="info" className="mt-4">
-                <strong>Note:</strong> {SIP_STEPUP_NOTE(
-                  formatCurrency(monthlyInvestment),
-                  formatCurrency(results.yearlyData[results.yearlyData.length - 1].monthlyInvestment),
-                  timePeriod,
-                  stepUpPercentage
-                )}
-              </InfoBox>
-            )}
-          </ChartContainer>
+          {/* Step-Up Info */}
+          {stepUpEnabled && results.yearlyData.length > 0 && (
+            <InfoBox variant="info" className="mt-4">
+              <strong>Note:</strong> {SIP_STEPUP_NOTE(
+                formatCurrency(monthlyInvestment),
+                formatCurrency(results.yearlyData[results.yearlyData.length - 1].monthlyInvestment),
+                timePeriod,
+                stepUpPercentage
+              )}
+            </InfoBox>
+          )}
         </motion.div>
       )}
 
