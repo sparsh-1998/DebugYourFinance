@@ -1,4 +1,34 @@
 /**
+ * Tax slabs for FY 2025-26 (Assessment Year 2026-27)
+ */
+export const TAX_SLABS = {
+  old: {
+    year: 'FY 2025-26',
+    standardDeduction: 50000,
+    slabs: [
+      { min: 0, max: 250000, rate: 0 },
+      { min: 250000, max: 500000, rate: 5 },
+      { min: 500000, max: 1000000, rate: 20 },
+      { min: 1000000, max: Infinity, rate: 30 }
+    ]
+  },
+  new: {
+    year: 'FY 2025-26',
+    standardDeduction: 75000,
+    slabs: [
+      { min: 0, max: 400000, rate: 0 },
+      { min: 400000, max: 800000, rate: 5 },
+      { min: 800000, max: 1200000, rate: 10 },
+      { min: 1200000, max: 1600000, rate: 15 },
+      { min: 1600000, max: 2000000, rate: 20 },
+      { min: 2000000, max: 2400000, rate: 25 },
+      { min: 2400000, max: Infinity, rate: 30 }
+    ],
+    rebateLimit: 1200000 // Section 87A: Up to ₹12L = NIL tax
+  }
+};
+
+/**
  * Calculate SIP (Systematic Investment Plan) returns
  * @param {number} monthlyInvestment - Initial monthly investment amount
  * @param {number} annualReturn - Expected annual return (%)
@@ -149,6 +179,26 @@ export function calculatePrepaymentImpact(principal, annualRate, years, prepayme
 }
 
 /**
+ * Helper function to calculate tax from slabs
+ * @param {number} taxableIncome - Income after deductions
+ * @param {Array} slabs - Array of tax slab objects
+ * @returns {number} - Calculated tax amount
+ */
+function calculateTaxFromSlabs(taxableIncome, slabs) {
+  let tax = 0;
+
+  for (const slab of slabs) {
+    if (taxableIncome > slab.min) {
+      const taxableInSlab = Math.min(taxableIncome, slab.max) - slab.min;
+      tax += taxableInSlab * (slab.rate / 100);
+    }
+    if (taxableIncome <= slab.max) break;
+  }
+
+  return tax;
+}
+
+/**
  * Calculate tax based on Indian tax regime
  * @param {number} income - Annual gross income
  * @param {object} deductions - Object containing deduction amounts
@@ -157,12 +207,12 @@ export function calculatePrepaymentImpact(principal, annualRate, years, prepayme
  */
 export function calculateTax(income, deductions, regime) {
   let taxableIncome = income;
-  let standardDeduction = 0;
   let totalDeductions = 0;
+  const regimeData = regime === 'old' ? TAX_SLABS.old : TAX_SLABS.new;
 
   if (regime === 'old') {
     // Old regime: Multiple deductions available
-    standardDeduction = 50000;
+    const standardDeduction = regimeData.standardDeduction;
 
     // Calculate major deductions with limits
     const section80C = Math.min(deductions.section80C || 0, 150000);
@@ -182,15 +232,8 @@ export function calculateTax(income, deductions, regime) {
 
     taxableIncome = Math.max(0, income - totalDeductions);
 
-    // Old regime slabs
-    let tax = 0;
-    if (taxableIncome <= 250000) tax = 0;
-    else if (taxableIncome <= 500000) tax = (taxableIncome - 250000) * 0.05;
-    else if (taxableIncome <= 1000000) {
-      tax = 12500 + (taxableIncome - 500000) * 0.20;
-    } else {
-      tax = 112500 + (taxableIncome - 1000000) * 0.30;
-    }
+    // Calculate tax using slabs
+    let tax = calculateTaxFromSlabs(taxableIncome, regimeData.slabs);
 
     // Add 4% cess
     tax = tax * 1.04;
@@ -203,42 +246,18 @@ export function calculateTax(income, deductions, regime) {
       deductions: totalDeductions
     };
   } else {
-    // New regime: Standard deduction only (75K)
-    // FY 2025-26 Budget 2025 - Updated slabs
-    standardDeduction = 75000;
+    // New regime: Standard deduction only
+    const standardDeduction = regimeData.standardDeduction;
     taxableIncome = Math.max(0, income - standardDeduction);
 
-    // New regime slabs (FY 2025-26)
-    let tax = 0;
-    if (taxableIncome <= 400000) {
-      // Up to ₹4L: Nil
-      tax = 0;
-    } else if (taxableIncome <= 800000) {
-      // ₹4L - ₹8L: 5%
-      tax = (taxableIncome - 400000) * 0.05;
-    } else if (taxableIncome <= 1200000) {
-      // ₹8L - ₹12L: 10%
-      tax = 20000 + (taxableIncome - 800000) * 0.10;
-    } else if (taxableIncome <= 1600000) {
-      // ₹12L - ₹16L: 15%
-      tax = 60000 + (taxableIncome - 1200000) * 0.15;
-    } else if (taxableIncome <= 2000000) {
-      // ₹16L - ₹20L: 20%
-      tax = 120000 + (taxableIncome - 1600000) * 0.20;
-    } else if (taxableIncome <= 2400000) {
-      // ₹20L - ₹24L: 25%
-      tax = 200000 + (taxableIncome - 2000000) * 0.25;
-    } else {
-      // Above ₹24L: 30%
-      tax = 300000 + (taxableIncome - 2400000) * 0.30;
-    }
+    // Calculate tax using slabs
+    let tax = calculateTaxFromSlabs(taxableIncome, regimeData.slabs);
 
     // Add 4% cess
     tax = tax * 1.04;
 
-    // Apply Section 87A rebate (up to ₹12L income = NIL tax)
-    // If taxable income <= ₹12L and tax is calculated, rebate makes it NIL
-    if (taxableIncome <= 1200000 && tax > 0) {
+    // Apply Section 87A rebate (up to rebate limit = NIL tax)
+    if (taxableIncome <= regimeData.rebateLimit && tax > 0) {
       tax = 0; // Full rebate under Section 87A
     }
 

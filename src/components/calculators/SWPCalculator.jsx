@@ -13,7 +13,13 @@ import {
   AlertBanner,
   InfoBox,
   ChartContainer,
-  CalculatorCard
+  CalculatorCard,
+  HowToUseSection,
+  FAQSection,
+  AnalysisSection,
+  FormulaBox,
+  VariableList,
+  NoteBox
 } from '../common';
 import {
   CALC_SWP,
@@ -44,6 +50,10 @@ import { UNIT_PERCENT, UNIT_YEARS } from '../../constants/units';
 import { COLOR_CHART_GRID, COLOR_SLATE_500, COLOR_CHART_PRIMARY, COLOR_ACCENT_BLUE } from '../../constants/colors';
 import { CHART_TOOLTIP_STYLE, CHART_STROKE_DASHARRAY, CHART_STROKE_WIDTH, CHART_HEIGHT, CHART_LABEL_OFFSET } from '../../constants/chartStyles';
 import { ANIMATION_DURATION_SLOW } from '../../constants/animations';
+import {
+  SWP_HOW_TO_USE,
+  SWP_FAQ
+} from '../../constants/educationalContent';
 
 export default function SWPCalculator() {
   const [lumpsumAmount, setLumpsumAmount] = useLocalStorage('swp_lumpsum', 5000000);
@@ -255,88 +265,40 @@ export default function SWPCalculator() {
 
       {/* Educational Sections */}
       <div className="mt-12 space-y-8">
-        {/* How to Use This Tool */}
-        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
-          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How to Use This Tool</h3>
-          <ol className="list-decimal list-inside space-y-3 text-slate-700 dark:text-slate-300">
-            <li><strong>Enter your retirement corpus amount</strong> - The total amount you have accumulated for generating regular income</li>
-            <li><strong>Set monthly withdrawal and expected return</strong> - Decide how much you need monthly and the expected growth rate of your investment</li>
-            <li><strong>Enable inflation-adjusted withdrawals (recommended)</strong> - Account for rising costs by increasing withdrawal amounts annually</li>
-          </ol>
-        </div>
+        <HowToUseSection steps={SWP_HOW_TO_USE} />
+        <FAQSection faqs={SWP_FAQ} />
+        <AnalysisSection title="How SWP Calculation Works" variant="warning">
+          <p>
+            The SWP calculation simulates year-by-year corpus depletion using compound interest and monthly withdrawals:
+          </p>
+          <FormulaBox formula="Corpus(year) = [Corpus(prev) × (1 + r)] - (W × 12)" />
+          <VariableList variables={[
+            { symbol: 'Corpus(year)', description: 'Remaining corpus at year-end' },
+            { symbol: 'Corpus(prev)', description: "Previous year's ending corpus" },
+            { symbol: 'r', description: 'Annual expected return rate (as decimal)' },
+            { symbol: 'W', description: 'Monthly withdrawal amount' }
+          ]} />
+          <p>
+            <strong>For Inflation-Adjusted Withdrawals:</strong> The monthly withdrawal amount increases annually by the
+            inflation rate. So W(year) = W(initial) × (1 + inflation)^(year-1). This ensures your purchasing power remains
+            constant despite rising prices.
+          </p>
+          <p>
+            <strong>Corpus Duration:</strong> The calculator continues year-by-year until either the corpus reaches zero
+            (depleted) or completes your specified time period. The chart shows both the declining corpus and cumulative
+            withdrawals over time.
+          </p>
+          <p>
+            <strong>Final Corpus:</strong> If your corpus lasts the full period, the remaining amount represents your legacy
+            or buffer for emergencies. A positive final corpus is ideal for sustainable retirement planning.
+          </p>
 
-        {/* FAQ Section */}
-        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
-          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">Frequently Asked Questions</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What is SWP (Systematic Withdrawal Plan)?</h4>
-              <p className="text-slate-700 dark:text-slate-300">
-                SWP is a method to withdraw a fixed amount from your mutual fund investments at regular intervals (usually monthly).
-                It's the opposite of SIP - instead of investing regularly, you're withdrawing regularly while your remaining
-                corpus continues to grow based on market returns. This is ideal for retirees or anyone needing regular income.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">Should I use inflation-adjusted withdrawals?</h4>
-              <p className="text-slate-700 dark:text-slate-300">
-                Yes, absolutely! Inflation-adjusted withdrawals are crucial for long-term financial planning. If you withdraw
-                a fixed ₹30,000 per month, its purchasing power will decrease every year due to inflation. With a 6% inflation
-                rate, after 10 years you'd need ₹53,700 to maintain the same lifestyle. Always enable this option for realistic planning.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">How much corpus do I need for retirement?</h4>
-              <p className="text-slate-700 dark:text-slate-300">
-                A common rule is the 4% withdrawal rule - your annual withdrawal should not exceed 4% of your corpus. For example,
-                if you need ₹40,000/month (₹4.8 lakhs/year), you need approximately ₹1.2 crores corpus. However, this depends on
-                your expected returns, inflation, and how long you want the corpus to last.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What if my corpus depletes before my planned period?</h4>
-              <p className="text-slate-700 dark:text-slate-300">
-                If the calculator shows your corpus will deplete, you have three options: 1) Increase your starting corpus,
-                2) Reduce monthly withdrawals, or 3) Aim for higher expected returns (by taking calculated risks). The tool
-                will warn you if your withdrawals are unsustainable.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Analysis Block */}
-        <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-6 border-2 border-orange-200 dark:border-orange-700">
-          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How SWP Calculation Works</h3>
-          <div className="text-slate-700 dark:text-slate-300 space-y-4">
-            <p>
-              The SWP calculation simulates year-by-year corpus depletion using compound interest and monthly withdrawals:
-            </p>
-            <div className="bg-white dark:bg-slate-900 rounded p-4 font-mono text-sm overflow-x-auto">
-              Corpus(year) = [Corpus(prev) × (1 + r)] - (W × 12)
-            </div>
-            <p>Where:</p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
-              <li><strong>Corpus(year)</strong> = Remaining corpus at year-end</li>
-              <li><strong>Corpus(prev)</strong> = Previous year's ending corpus</li>
-              <li><strong>r</strong> = Annual expected return rate (as decimal)</li>
-              <li><strong>W</strong> = Monthly withdrawal amount</li>
-            </ul>
-            <p>
-              <strong>For Inflation-Adjusted Withdrawals:</strong> The monthly withdrawal amount increases annually by the
-              inflation rate. So W(year) = W(initial) × (1 + inflation)^(year-1). This ensures your purchasing power remains
-              constant despite rising prices.
-            </p>
-            <p>
-              <strong>Corpus Duration:</strong> The calculator continues year-by-year until either the corpus reaches zero
-              (depleted) or completes your specified time period. The chart shows both the declining corpus and cumulative
-              withdrawals over time.
-            </p>
-            <p>
-              <strong>Final Corpus:</strong> If your corpus lasts the full period, the remaining amount represents your legacy
-              or buffer for emergencies. A positive final corpus is ideal for sustainable retirement planning.
-            </p>
-          </div>
-        </div>
+          <NoteBox type="warning">
+            Always enable inflation-adjusted withdrawals for realistic planning. What seems like enough today won't be
+            sufficient in 10-20 years. Follow the 4% rule - your annual withdrawal should ideally not exceed 4% of your corpus.
+            Keep a safety buffer of 20-30% for medical emergencies and unexpected expenses.
+          </NoteBox>
+        </AnalysisSection>
       </div>
     </CalculatorCard>
   );
