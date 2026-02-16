@@ -394,6 +394,146 @@ export default function RentVsBuyCalculator() {
           </ChartContainer>
         </motion.div>
       )}
+
+      {/* Educational Sections */}
+      <div className="mt-12 space-y-8">
+        {/* How to Use This Tool */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How to Use This Tool</h3>
+          <ol className="list-decimal list-inside space-y-3 text-slate-700 dark:text-slate-300">
+            <li><strong>Enter property and rent details</strong> - Property price, down payment, loan interest rate, current rent, and expected rent increases</li>
+            <li><strong>Set time horizon and investment returns</strong> - How long you plan to stay and what returns you expect from alternative investments</li>
+            <li><strong>Compare net worth scenarios</strong> - See which option builds more wealth over your chosen timeline</li>
+          </ol>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">Frequently Asked Questions</h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">Should I rent or buy a home?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                It depends on multiple factors: your financial situation, career stability, city (property appreciation rates),
+                and lifestyle preferences. Generally, <strong>buying is better if</strong>: you plan to stay 7+ years, property
+                prices are reasonable, you have sufficient down payment, and you value stability. <strong>Renting is better if</strong>:
+                you're young and career-mobile, property prices are inflated, you prefer liquidity, or you can invest the
+                difference at higher returns than real estate appreciation.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What is opportunity cost in this context?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                Opportunity cost is what you give up when choosing to buy. When you pay ₹20 lakhs as down payment, you lose
+                the potential investment returns on that amount. If that ₹20L could have grown to ₹80L in mutual funds over
+                20 years, but your home only appreciates to ₹70L, you've lost ₹10L in opportunity cost. This calculator accounts
+                for this critical factor that most people ignore.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">Why does renting + investing sometimes win?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                When you rent, you only pay rent (~₹30K/month). When you buy, you pay EMI (~₹60K/month for the same property).
+                If you invest the ₹30K difference plus your down payment in equity, and market returns (12%) beat real estate
+                appreciation (5-7%), renting can build more wealth. Plus, rent is lower than EMI initially, giving you more
+                investable surplus. However, this requires investment discipline and doesn't account for emotional benefits
+                of ownership.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What about tax benefits on home loans?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                Home loan tax benefits are significant: ₹2 lakhs on interest (Section 24b) + ₹1.5 lakhs on principal (Section 80C).
+                However, these only apply to the old tax regime and only if you have high taxable income. The calculator doesn't
+                factor in tax benefits, so buying might be even better if you're in higher tax brackets. For most people in the
+                new regime, the basic calculation still holds.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Analysis Block */}
+        <div className="bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 rounded-lg p-6 border-2 border-blue-200 dark:border-blue-700">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How Rent vs Buy Calculation Works</h3>
+          <div className="text-slate-700 dark:text-slate-300 space-y-4">
+            <p>
+              This calculator simulates two parallel financial scenarios over your chosen time period:
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white dark:bg-slate-900 rounded p-4">
+                <h4 className="font-semibold mb-3 text-blue-600 dark:text-blue-400">Rent + Invest Scenario</h4>
+                <ol className="text-sm space-y-2 list-decimal list-inside">
+                  <li>Invest full down payment in market</li>
+                  <li>Pay monthly rent (increases annually)</li>
+                  <li>Invest EMI-Rent difference monthly</li>
+                  <li>Compound all investments at expected return rate</li>
+                  <li>Final Net Worth = Investment Corpus</li>
+                </ol>
+              </div>
+              <div className="bg-white dark:bg-slate-900 rounded p-4">
+                <h4 className="font-semibold mb-3 text-green-600 dark:text-green-400">Buy Home Scenario</h4>
+                <ol className="text-sm space-y-2 list-decimal list-inside">
+                  <li>Pay down payment upfront</li>
+                  <li>Pay monthly EMI until loan tenure</li>
+                  <li>Home value appreciates annually</li>
+                  <li>Build equity = Home Value - Outstanding Loan</li>
+                  <li>Final Net Worth = Home Equity</li>
+                </ol>
+              </div>
+            </div>
+
+            <p>
+              <strong>Key Formulas:</strong>
+            </p>
+
+            <div className="bg-white dark:bg-slate-900 rounded p-4 space-y-2">
+              <div className="text-sm">
+                <strong>EMI Calculation:</strong>
+                <div className="font-mono mt-1">EMI = [P × r × (1+r)ⁿ] / [(1+r)ⁿ - 1]</div>
+              </div>
+              <div className="text-sm">
+                <strong>Investment Growth (Rent Scenario):</strong>
+                <div className="font-mono mt-1">FV = Down Payment × (1+r)ⁿ + Monthly Investments × [(1+r)ⁿ - 1] / r</div>
+              </div>
+              <div className="text-sm">
+                <strong>Home Value Appreciation:</strong>
+                <div className="font-mono mt-1">Home Value = Purchase Price × (1 + appreciation rate)ⁿ</div>
+              </div>
+              <div className="text-sm">
+                <strong>Home Equity:</strong>
+                <div className="font-mono mt-1">Equity = Current Home Value - Outstanding Loan</div>
+              </div>
+            </div>
+
+            <p>
+              <strong>Net Worth Comparison:</strong>
+            </p>
+            <p>
+              The calculator tracks both scenarios year by year and shows which option creates more wealth. The crossover
+              point (if any) indicates when buying starts outperforming renting, or vice versa. Early years favor renting
+              due to high EMI-to-equity ratio, but long-term ownership eventually builds wealth as the loan gets paid off.
+            </p>
+
+            <p>
+              <strong>Important Assumptions:</strong>
+            </p>
+            <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
+              <li>Rent increases by 5% annually (typical in Indian cities)</li>
+              <li>Property appreciates at 6% annually (conservative estimate)</li>
+              <li>Investment returns assume consistent market performance</li>
+              <li>Doesn't include: maintenance, property taxes, transaction costs, or tax benefits</li>
+              <li>Assumes disciplined investing of the difference when renting</li>
+            </ul>
+
+            <p className="text-sm mt-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded border border-purple-200 dark:border-purple-700">
+              <strong>💡 Remember:</strong> This is a purely financial comparison. Home ownership provides intangible benefits
+              like stability, customization freedom, and emotional security that can't be quantified. Make your decision based
+              on both financial calculations AND personal circumstances.
+            </p>
+          </div>
+        </div>
+      </div>
     </CalculatorCard>
   );
 }

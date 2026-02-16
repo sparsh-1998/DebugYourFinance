@@ -1,52 +1,9 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Instagram, Loader2, AlertCircle } from 'lucide-react';
+import { Play, Instagram } from 'lucide-react';
+import instagramData from '../../data/instagram.json';
 
 export default function InstagramSection() {
-  const [reels, setReels] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch Instagram feed from serverless function
-  useEffect(() => {
-    async function fetchInstagramFeed() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch from Vercel serverless function
-        const response = await fetch('/api/instagram');
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success && data.videos) {
-          setReels(data.videos);
-        } else {
-          throw new Error(data.message || 'Failed to load Instagram feed');
-        }
-      } catch (err) {
-        console.error('Error fetching Instagram feed:', err);
-        setError(err.message);
-        // Set fallback placeholder data
-        setReels([
-          {
-            id: 1,
-            title: 'Follow us on Instagram',
-            thumbnail: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=400&h=700&fit=crop',
-            permalink: 'https://instagram.com/debugyourfinance'
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchInstagramFeed();
-  }, []);
+  const reels = instagramData.reels;
 
   return (
     <section id="socials" className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-slate-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900">
@@ -70,32 +27,8 @@ export default function InstagramSection() {
           </p>
         </motion.div>
 
-        {/* Loading State */}
-        {loading && (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-12 w-12 text-pink-600 animate-spin" />
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && !loading && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-8 flex items-start space-x-3"
-          >
-            <AlertCircle className="h-6 w-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-1">Unable to load Instagram feed</h3>
-              <p className="text-yellow-700 dark:text-yellow-300 text-sm">
-                {error}. Please check your Instagram API configuration or visit our Instagram profile directly.
-              </p>
-            </div>
-          </motion.div>
-        )}
-
         {/* Reels Grid */}
-        {!loading && reels.length > 0 && (
+        {reels.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {reels.map((reel, index) => (
               <motion.a
@@ -132,11 +65,6 @@ export default function InstagramSection() {
                   <p className="text-white font-semibold text-lg drop-shadow-lg line-clamp-2">
                     {reel.title}
                   </p>
-                  {reel.timestamp && (
-                    <p className="text-white/80 text-xs mt-1">
-                      {new Date(reel.timestamp).toLocaleDateString()}
-                    </p>
-                  )}
                 </div>
               </motion.a>
             ))}

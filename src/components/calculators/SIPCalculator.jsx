@@ -192,6 +192,88 @@ export default function SIPCalculator() {
           </ChartContainer>
         </motion.div>
       )}
+
+      {/* Educational Sections */}
+      <div className="mt-12 space-y-8">
+        {/* How to Use This Tool */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How to Use This Tool</h3>
+          <ol className="list-decimal list-inside space-y-3 text-slate-700 dark:text-slate-300">
+            <li><strong>Enter your monthly investment amount</strong> - The amount you can invest every month in mutual funds</li>
+            <li><strong>Set expected return rate and time period</strong> - Choose realistic returns (typically 10-15% for equity funds) and your investment horizon</li>
+            <li><strong>Enable Step-Up SIP (optional)</strong> - Increase your monthly investment annually to combat inflation and build wealth faster</li>
+          </ol>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">Frequently Asked Questions</h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What is a Step-Up SIP?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                A Step-Up SIP allows you to increase your monthly investment amount by a fixed percentage each year.
+                For example, if you start with ₹10,000/month with a 10% step-up, your investment will increase to ₹11,000
+                in Year 2, ₹12,100 in Year 3, and so on. This helps you match your investments with your growing income.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">How does a 10% annual increase affect my corpus?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                A 10% annual step-up can significantly boost your final corpus. With a regular SIP of ₹10,000/month for
+                20 years at 12% returns, you'd accumulate approximately ₹99 lakhs. With a 10% step-up, this could grow to
+                around ₹1.5 crores - a 50% increase in wealth!
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">Is SIP better than Lumpsum?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                SIP is generally better for most investors because it reduces timing risk through rupee cost averaging,
+                makes investing disciplined and automatic, and doesn't require large capital upfront. However, lumpsum can
+                work better in a rising market if you have surplus funds. For regular investors, SIP is the recommended approach.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What is a realistic return rate for SIP?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                Equity mutual funds have historically delivered 12-15% returns over long periods (10+ years). Debt funds
+                typically give 7-9%. A balanced portfolio might average 10-12%. Remember, past performance doesn't guarantee
+                future returns, so it's wise to use conservative estimates (10-12%) for planning.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Analysis Block */}
+        <div className="bg-gradient-to-br from-accent/5 to-accent/10 dark:from-accent/10 dark:to-accent/20 rounded-lg p-6 border-2 border-accent/20 dark:border-accent/30">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How SIP Calculation Works</h3>
+          <div className="text-slate-700 dark:text-slate-300 space-y-4">
+            <p>
+              Our SIP calculator uses the <strong>Future Value of Annuity formula</strong> to calculate your investment returns:
+            </p>
+            <div className="bg-white dark:bg-slate-900 rounded p-4 font-mono text-sm overflow-x-auto">
+              FV = P × [(1 + r)ⁿ - 1] / r × (1 + r)
+            </div>
+            <p>Where:</p>
+            <ul className="list-disc list-inside space-y-2 ml-4">
+              <li><strong>FV</strong> = Future Value (Total corpus)</li>
+              <li><strong>P</strong> = Monthly investment amount</li>
+              <li><strong>r</strong> = Expected monthly return rate (annual rate ÷ 12)</li>
+              <li><strong>n</strong> = Total number of months (years × 12)</li>
+            </ul>
+            <p>
+              <strong>For Step-Up SIP:</strong> The calculation is done year by year, where each year's investment amount
+              increases by the step-up percentage. The formula applies to each year's contributions separately, and all
+              future values are summed to get the final corpus.
+            </p>
+            <p>
+              <strong>Wealth Gained:</strong> This is simply the difference between your Future Value and the total amount
+              you invested (Total Invested = Sum of all monthly contributions). This represents the returns generated purely
+              from compounding.
+            </p>
+          </div>
+        </div>
+      </div>
     </CalculatorCard>
   );
 }

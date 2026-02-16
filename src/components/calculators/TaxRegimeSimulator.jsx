@@ -294,6 +294,116 @@ export default function TaxRegimeSimulator() {
           </ChartContainer>
         </motion.div>
       )}
+
+      {/* Educational Sections */}
+      <div className="mt-12 space-y-8">
+        {/* How to Use This Tool */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How to Use This Tool</h3>
+          <ol className="list-decimal list-inside space-y-3 text-slate-700 dark:text-slate-300">
+            <li><strong>Enter your annual gross income</strong> - Your total salary/income before any deductions (CTC or gross income)</li>
+            <li><strong>Fill in applicable deductions</strong> - Add investments and expenses eligible for tax deductions under various sections</li>
+            <li><strong>Compare tax regimes</strong> - Review which regime (Old vs New) saves you more money based on your deductions</li>
+          </ol>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">Frequently Asked Questions</h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What is Section 80C and what qualifies?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                Section 80C allows deductions up to ₹1.5 lakhs per year for investments in: PPF, EPF, ELSS mutual funds,
+                life insurance premiums, NSC, tax-saving FDs, principal repayment of home loan, tuition fees, and Sukanya
+                Samriddhi Yojana. These are the most common tax-saving investments available to Indian taxpayers.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">Should I choose Old or New Tax Regime?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                Choose the <strong>Old Regime</strong> if you have significant deductions (₹2.5+ lakhs in 80C, HRA, home loan interest, etc.).
+                Choose the <strong>New Regime</strong> if you have minimal deductions and prefer lower tax slabs without claiming exemptions.
+                The new regime has lower rates but doesn't allow most deductions. Use this calculator to find which saves you more!
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">What is Section 80CCD(1B) for NPS?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                Section 80CCD(1B) provides an additional deduction of up to ₹50,000 for contributions to the National Pension
+                System (NPS). This is over and above the ₹1.5 lakh limit of Section 80C, allowing a total deduction of ₹2 lakhs.
+                It's one of the best tax-saving options with dual benefits of retirement planning and tax savings.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg text-primary dark:text-white mb-2">How is HRA exemption calculated?</h4>
+              <p className="text-slate-700 dark:text-slate-300">
+                HRA (House Rent Allowance) exemption is the minimum of: 1) Actual HRA received, 2) Rent paid minus 10% of salary,
+                or 3) 50% of salary (metro) or 40% (non-metro). Only applicable if you're living in a rented house. Not available
+                in the new tax regime.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Analysis Block */}
+        <div className="bg-gradient-to-br from-accent/5 to-accent/10 dark:from-accent/10 dark:to-accent/20 rounded-lg p-6 border-2 border-accent/20 dark:border-accent/30">
+          <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">How Tax Calculation Works</h3>
+          <div className="text-slate-700 dark:text-slate-300 space-y-4">
+            <p>
+              Tax calculation in India follows a <strong>slab-based progressive system</strong>. Your income is divided into
+              slabs, and each slab is taxed at a different rate:
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white dark:bg-slate-900 rounded p-4">
+                <h4 className="font-semibold mb-2">Old Tax Regime Slabs (FY 2024-25)</h4>
+                <ul className="text-sm space-y-1">
+                  <li>Up to ₹2.5L: 0%</li>
+                  <li>₹2.5L - ₹5L: 5%</li>
+                  <li>₹5L - ₹10L: 20%</li>
+                  <li>Above ₹10L: 30%</li>
+                </ul>
+              </div>
+              <div className="bg-white dark:bg-slate-900 rounded p-4">
+                <h4 className="font-semibold mb-2">New Tax Regime Slabs (FY 2024-25)</h4>
+                <ul className="text-sm space-y-1">
+                  <li>Up to ₹3L: 0%</li>
+                  <li>₹3L - ₹7L: 5%</li>
+                  <li>₹7L - ₹10L: 10%</li>
+                  <li>₹10L - ₹12L: 15%</li>
+                  <li>₹12L - ₹15L: 20%</li>
+                  <li>Above ₹15L: 30%</li>
+                </ul>
+              </div>
+            </div>
+
+            <p>
+              <strong>Step-by-step calculation:</strong>
+            </p>
+            <ol className="list-decimal list-inside space-y-2 ml-4">
+              <li><strong>Gross Income:</strong> Your total annual income</li>
+              <li><strong>Less: Deductions:</strong> Section 80C, 80D, HRA, NPS, etc. (only in Old Regime)</li>
+              <li><strong>Taxable Income:</strong> Gross Income - Total Deductions</li>
+              <li><strong>Tax Calculation:</strong> Apply progressive slab rates to taxable income</li>
+              <li><strong>Add: Cess:</strong> 4% Health & Education Cess on total tax</li>
+              <li><strong>Less: Rebate:</strong> ₹12,500 rebate if income under ₹7L (New Regime)</li>
+              <li><strong>Final Tax:</strong> Total tax payable for the year</li>
+            </ol>
+
+            <p>
+              <strong>Take-home Calculation:</strong> Take-home = Gross Income - Total Tax Payable. This is the actual amount
+              you receive in hand after all taxes.
+            </p>
+
+            <p className="text-sm mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded border border-yellow-200 dark:border-yellow-700">
+              <strong>Note:</strong> This calculator provides estimates based on standard tax rules. Actual tax may vary based
+              on additional income sources, special deductions, surcharge for high earners, and state-specific taxes. Consult
+              a tax professional for precise calculations.
+            </p>
+          </div>
+        </div>
+      </div>
     </CalculatorCard>
   );
 }
