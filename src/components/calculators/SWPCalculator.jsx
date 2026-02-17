@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { TrendingDown } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -51,7 +52,7 @@ import {
   SWP_FAQ
 } from '../../constants/educationalContent';
 
-export default function SWPCalculator() {
+const SWPCalculator = memo(function SWPCalculator() {
   const [lumpsumAmount, setLumpsumAmount] = useLocalStorage('swp_lumpsum', 5000000);
   const [monthlyWithdrawal, setMonthlyWithdrawal] = useLocalStorage('swp_withdrawal', 30000);
   const [expectedReturn, setExpectedReturn] = useLocalStorage('swp_return', 10);
@@ -263,4 +264,6 @@ export default function SWPCalculator() {
       </div>
     </CalculatorCard>
   );
-}
+});
+
+export default SWPCalculator;

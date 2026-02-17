@@ -10,6 +10,5 @@ export const ROUTES = {
 
 export const SOCIAL_LINKS = {
   INSTAGRAM: 'https://instagram.com/debugyourfinance',
-  TWITTER: 'https://twitter.com/debugyourfinance',
-  LINKEDIN: 'https://linkedin.com/company/debugyourfinance'
+  TWITTER: 'https://twitter.com/debugyourfinance'
 };

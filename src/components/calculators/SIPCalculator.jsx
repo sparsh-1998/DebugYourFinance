@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -46,7 +47,7 @@ import {
   SIP_FAQ
 } from '../../constants/educationalContent';
 
-export default function SIPCalculator() {
+const SIPCalculator = memo(function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useLocalStorage('sip_monthly', 10000);
   const [expectedReturn, setExpectedReturn] = useLocalStorage('sip_return', 12);
   const [timePeriod, setTimePeriod] = useLocalStorage('sip_years', 10);
@@ -221,4 +222,6 @@ export default function SIPCalculator() {
       </div>
     </CalculatorCard>
   );
-}
+});
+
+export default SIPCalculator;

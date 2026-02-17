@@ -167,7 +167,6 @@ export const FOOTER_COPYRIGHT = (year) => `© ${year} DebugYourFinance. Made wit
 // Social Media
 export const SOCIAL_INSTAGRAM = 'Instagram';
 export const SOCIAL_TWITTER = 'Twitter';
-export const SOCIAL_LINKEDIN = 'LinkedIn';
 
 // Chart Labels
 export const CHART_YEARS = 'Years';

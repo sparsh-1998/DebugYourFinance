@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Receipt } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -54,7 +55,7 @@ import {
   TAX_FAQ
 } from '../../constants/educationalContent';
 
-export default function TaxRegimeSimulator() {
+const TaxRegimeSimulator = memo(function TaxRegimeSimulator() {
   const [income, setIncome] = useLocalStorage('tax_income', 1000000);
   const [section80C, setSection80C] = useLocalStorage('tax_deductions_80c', 150000);
   const [section80D, setSection80D] = useLocalStorage('tax_deductions_80d', 25000);
@@ -359,4 +360,6 @@ export default function TaxRegimeSimulator() {
       </div>
     </CalculatorCard>
   );
-}
+});
+
+export default TaxRegimeSimulator;

@@ -1,4 +1,4 @@
-import { Heart, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Heart, Instagram, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -16,13 +16,7 @@ export default function Footer() {
       icon: Twitter,
       href: 'https://twitter.com/debugyourfinance',
       color: 'hover:text-blue-400'
-    },
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      href: 'https://linkedin.com/company/debugyourfinance',
-      color: 'hover:text-blue-600'
-    },
+    }
   ];
 
   return (

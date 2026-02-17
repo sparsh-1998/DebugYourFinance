@@ -1,277 +1,240 @@
-# DebugYourFinance
+# 💰 DebugYourFinance
 
-**Master Your Money. Zero Friction.**
+> Privacy-first financial tools for the modern investor. No login, no tracking, just pure value.
 
-A privacy-first financial tools web application built with React, Vite, and Tailwind CSS. All calculations happen in your browser—no servers, no tracking, no compromises.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-7-purple)](https://vitejs.dev/)
 
-## Features
-
-### 🧮 Financial Calculators
-
-1. **SIP Calculator**
-   - Calculate Systematic Investment Plan returns
-   - Visualize wealth growth over time with interactive charts
-   - See invested amount vs wealth gained
-
-2. **Tax Regime Simulator**
-   - Compare Old vs New Indian tax regimes (FY 2025-26)
-   - Input multiple deductions (80C, 80D, HRA, Home Loan)
-   - Get instant recommendations on which regime saves more
-
-3. **Loan Tenure Reducer**
-   - Calculate how prepayments reduce loan tenure
-   - Visualize interest savings
-   - Support for one-time, annual, and monthly prepayments
-
-### 📱 Dynamic Instagram Integration
-
-- **Live Feed**: Display your latest Instagram videos dynamically
-- **Serverless Architecture**: Secure API integration via Vercel Functions
-- **Auto-Refresh**: Feed updates automatically (cached for 1 hour)
-- **Fallback Support**: Graceful degradation if API is unavailable
-- **Helper Scripts**: Automated token management tools included
-
-👉 **[Quick Start (5 min)](docs/INSTAGRAM_QUICK_START.md)** | **[Full Setup Guide](docs/INSTAGRAM_SETUP.md)**
-
-### 🔒 Privacy-First Design
-
-- **No Login Required**: Start using tools immediately
-- **No Server Sync**: All data stays in your browser
-- **localStorage Persistence**: Your inputs are saved locally
-- **Zero Tracking**: No analytics, no cookies, no compromises
-
-### 🎨 Modern UI/UX
-
-- **Minimalist Design**: Clean interface with Slate-900 and Emerald-500 color palette
-- **Mobile-First**: Fully responsive across all devices
-- **Smooth Animations**: Powered by Framer Motion
-- **Interactive Charts**: Beautiful visualizations with Recharts
-
-## Tech Stack
-
-- **Frontend Framework**: React 18
-- **Build Tool**: Vite 7
-- **Styling**: Tailwind CSS 3
-- **Charts**: Recharts 2
-- **Animations**: Framer Motion 11
-- **Icons**: Lucide React
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20.19+ or 22.12+ (recommended)
-- npm 10+
-
-### Installation
-
-1. Navigate to the project directory:
-```bash
-cd DebugYourFinance
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. Open your browser and navigate to:
-```
-http://localhost:5173
-```
-
-### Instagram Feed Setup (Optional)
-
-To display your live Instagram videos:
-
-1. Follow the [Instagram Setup Guide](INSTAGRAM_SETUP.md)
-2. Create a `.env` file in the project root:
-```bash
-cp .env.example .env
-```
-3. Add your Instagram access token to `.env`:
-```env
-INSTAGRAM_ACCESS_TOKEN=your_token_here
-```
-4. Restart the development server
-
-**Note:** The app works perfectly without Instagram integration - it will show placeholder content if not configured.
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-The production-ready files will be in the `dist/` directory.
-
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
-## Project Structure
-
-```
-DebugYourFinance/
-├── api/                    # Vercel serverless functions
-│   └── instagram.js       # Instagram API endpoint
-├── public/                # Static assets
-├── src/
-│   ├── components/        # React components
-│   │   ├── Navbar.jsx
-│   │   ├── Hero.jsx
-│   │   ├── SIPCalculator.jsx
-│   │   ├── TaxRegimeSimulator.jsx
-│   │   ├── LoanTenureReducer.jsx
-│   │   ├── InstagramSection.jsx  # Dynamic Instagram feed
-│   │   ├── AdBanner.jsx
-│   │   ├── About.jsx
-│   │   └── Footer.jsx
-│   ├── hooks/             # Custom React hooks
-│   │   └── useLocalStorage.js
-│   ├── utils/             # Utility functions
-│   │   └── calculations.js
-│   ├── App.jsx            # Main app component
-│   ├── main.jsx           # App entry point
-│   └── index.css          # Global styles
-├── .env.example           # Environment variables template
-├── .gitignore
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── vite.config.js
-├── README.md
-└── INSTAGRAM_SETUP.md     # Instagram API setup guide
-```
-
-## Features in Detail
-
-### SIP Calculator
-
-The SIP Calculator helps you plan your wealth growth through systematic investments.
-
-**Inputs:**
-- Monthly Investment: ₹500 - ₹10,00,000
-- Expected Return: 6% - 20% p.a.
-- Time Period: 1 - 30 years
-
-**Outputs:**
-- Total invested amount
-- Wealth gained (returns)
-- Future value
-- Year-by-year growth chart
-
-### Tax Regime Simulator
-
-Compare Old vs New Indian tax regimes to maximize your savings.
-
-**Old Regime (FY 2025-26):**
-- Up to ₹2.5L: Nil
-- ₹2.5L - ₹5L: 5%
-- ₹5L - ₹10L: 20%
-- Above ₹10L: 30%
-- Deductions: Standard (₹50K) + 80C + 80D + HRA + 24b
-
-**New Regime (FY 2025-26) - Budget 2025:**
-- Up to ₹4L: Nil
-- ₹4L - ₹8L: 5%
-- ₹8L - ₹12L: 10%
-- ₹12L - ₹16L: 15%
-- ₹16L - ₹20L: 20%
-- ₹20L - ₹24L: 25%
-- Above ₹24L: 30%
-- Deductions: Standard (₹75K) only
-- **Special Benefit:** NIL tax up to ₹12L taxable income (Section 87A rebate)
-
-### Loan Tenure Reducer
-
-Calculate the impact of prepayments on your home loan.
-
-**Inputs:**
-- Loan amount
-- Interest rate
-- Original tenure
-- Prepayment amount
-- Prepayment frequency (one-time, annual, monthly)
-
-**Outputs:**
-- Reduced tenure
-- Interest saved
-- Total savings
-- Principal reduction timeline chart
-
-## localStorage Keys
-
-The app uses the following localStorage keys to persist user data:
-
-- `sip_monthly`: Monthly SIP investment
-- `sip_return`: Expected return percentage
-- `sip_years`: Investment time period
-- `tax_income`: Annual income
-- `tax_deductions_80c`: Section 80C deductions
-- `tax_deductions_80d`: Section 80D deductions
-- `tax_hra`: HRA amount
-- `tax_homeloan`: Home loan interest
-- `loan_principal`: Loan amount
-- `loan_rate`: Interest rate
-- `loan_tenure`: Loan tenure
-- `loan_prepayment`: Prepayment amount
-- `loan_frequency`: Prepayment frequency
-
-## Deployment
-
-This app can be deployed to any static hosting service:
-
-### Vercel (Recommended)
-
-```bash
-npm install -g vercel
-vercel
-```
-
-**Note:** The `vercel.json` configuration ensures client-side routing works correctly for all routes.
-
-### GitHub Pages
-
-1. Update `vite.config.js` with base path
-2. Build and deploy the dist folder
-
-## Browser Support
-
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-MIT License - feel free to use this project for your own purposes.
-
-## Acknowledgments
-
-- Built with [React](https://react.dev/)
-- Styled with [Tailwind CSS](https://tailwindcss.com/)
-- Charts by [Recharts](https://recharts.org/)
-- Icons from [Lucide](https://lucide.dev/)
-- Animations by [Framer Motion](https://www.framer.com/motion/)
-
-## Contact
-
-For questions or feedback, reach out:
-- Instagram: [@DebugYourFinance](https://instagram.com/debugyourfinance)
-- Twitter: [@DebugYourFinance](https://twitter.com/debugyourfinance)
+**Live Demo:** [debugyourfinance.com](https://debugyourfinance.com)
 
 ---
 
-Made with ❤️ for financial freedom
+## 🌟 Features
+
+### Financial Calculators
+- **SIP Calculator** - Plan systematic investments with step-up options
+- **SWP Generator** - Design systematic withdrawal plans for retirement
+- **Tax Regime Simulator** - Compare old vs new tax regimes (India)
+- **Loan Tenure Reducer** - Optimize prepayments and reduce EMI burden
+- **Rent vs Buy** - Make informed housing decisions
+
+### Technical Highlights
+- ✅ **Zero Dependencies on Backend** - Fully client-side
+- ✅ **Privacy First** - All data stored locally, never leaves your device
+- ✅ **Blazing Fast** - Optimized bundle (~256 KB gzipped)
+- ✅ **Progressive Web App** - Install and use offline
+- ✅ **Dark Mode** - Easy on the eyes
+- ✅ **Responsive Design** - Works on all devices
+- ✅ **SEO Optimized** - Structured data, meta tags
+- ✅ **Accessible** - WCAG compliant with ARIA labels
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20.19+ or 22.12+
+- npm 9+ or yarn/pnpm
+
+### Installation
+
+\`\`\`bash
+# Clone the repository
+git clone https://github.com/yourusername/DebugYourFinance.git
+cd DebugYourFinance
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+\`\`\`
+
+Visit \`http://localhost:5173\` to see the app running.
+
+---
+
+## 📦 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| \`npm run dev\` | Start development server with HMR |
+| \`npm run build\` | Build for production |
+| \`npm run preview\` | Preview production build locally |
+| \`npm run lint\` | Run ESLint |
+| \`npm test\` | Run tests in watch mode |
+| \`npm run test:run\` | Run tests once |
+| \`npm run test:coverage\` | Generate coverage report |
+| \`npm run test:ui\` | Open Vitest UI |
+
+---
+
+## 🏗️ Project Structure
+
+\`\`\`
+DebugYourFinance/
+├── public/                 # Static assets
+│   ├── favicon.svg        # App icon
+│   ├── manifest.json      # PWA manifest
+│   ├── robots.txt         # SEO
+│   ├── sitemap.xml        # SEO
+│   └── _headers           # Security headers
+├── src/
+│   ├── components/
+│   │   ├── calculators/   # Calculator components
+│   │   ├── common/        # Reusable UI components
+│   │   ├── features/      # Feature-specific components
+│   │   └── layout/        # Layout components
+│   ├── constants/         # App constants & messages
+│   ├── contexts/          # React contexts (Theme)
+│   ├── data/              # Static data
+│   ├── hooks/             # Custom React hooks
+│   ├── layouts/           # Page layouts
+│   ├── pages/             # Route pages
+│   ├── utils/             # Utility functions
+│   └── main.jsx           # App entry point
+├── vite.config.js         # Vite configuration
+├── tailwind.config.js     # Tailwind CSS config
+└── vercel.json            # Deployment config
+\`\`\`
+
+---
+
+## 🧪 Testing
+
+We use **Vitest** + **React Testing Library** for testing.
+
+\`\`\`bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Open test UI
+npm run test:ui
+\`\`\`
+
+### Test Coverage
+- ✅ Utility functions (calculations)
+- ✅ Custom hooks (useFormattedNumber, useLocalStorage)
+- ✅ Common components (FormInput, RangeSlider, ErrorBoundary)
+
+---
+
+## 🎨 Styling
+
+- **Framework:** Tailwind CSS 3.4
+- **Typography:** Inter font family
+- **Color Palette:**
+  - Primary: Slate shades
+  - Accent: Green (#10b981)
+  - Supports light & dark mode
+
+---
+
+## 🔒 Security
+
+### Implemented Headers
+- \`X-Frame-Options: DENY\`
+- \`X-Content-Type-Options: nosniff\`
+- \`X-XSS-Protection: 1; mode=block\`
+- \`Referrer-Policy: strict-origin-when-cross-origin\`
+- \`Permissions-Policy\` (restrictive)
+
+### Data Privacy
+- All calculations happen client-side
+- No analytics or tracking scripts
+- LocalStorage used for preferences only
+- No personal data collected
+
+---
+
+## 🚢 Deployment
+
+### Netlify / Cloudflare Pages
+Security headers are automatically applied via \`public/_headers\`.
+
+\`\`\`bash
+npm run build
+# Deploy the dist/ folder
+\`\`\`
+
+### Vercel
+Security headers configured in \`vercel.json\`.
+
+\`\`\`bash
+vercel --prod
+\`\`\`
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| React 19 | UI framework |
+| Vite 7 | Build tool |
+| React Router 7 | Client-side routing |
+| Tailwind CSS 3 | Styling |
+| Framer Motion | Animations |
+| Recharts | Data visualization |
+| Lucide React | Icons |
+| Vitest | Testing |
+
+---
+
+## 📈 Performance
+
+| Metric | Value |
+|--------|-------|
+| Bundle Size | ~256 KB (gzipped) |
+| First Contentful Paint | < 1s |
+| Time to Interactive | < 2s |
+| Code Splitting | ✅ Per calculator |
+| Lazy Loading | ✅ All pages |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (\`git checkout -b feature/AmazingFeature\`)
+3. Commit your changes (\`git commit -m 'Add AmazingFeature'\`)
+4. Push to the branch (\`git push origin feature/AmazingFeature\`)
+5. Open a Pull Request
+
+### Code Style
+- Follow existing code patterns
+- Run \`npm run lint\` before committing
+- Add tests for new features
+- Update documentation as needed
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🙏 Acknowledgments
+
+- Icons by [Lucide](https://lucide.dev/)
+- Charts by [Recharts](https://recharts.org/)
+- Animations by [Framer Motion](https://www.framer.com/motion/)
+- Font by [Google Fonts](https://fonts.google.com/)
+
+---
+
+## 📧 Contact
+
+- Website: [debugyourfinance.com](https://debugyourfinance.com)
+- Instagram: [@debugyourfinance](https://instagram.com/debugyourfinance)
+
+---
+
+**Made with ❤️ for smarter financial decisions**

@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Home, TrendingDown } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -54,7 +55,7 @@ import {
   LOAN_FAQ
 } from '../../constants/educationalContent';
 
-export default function LoanTenureReducer() {
+const LoanTenureReducer = memo(function LoanTenureReducer() {
   const [principal, setPrincipal] = useLocalStorage('loan_principal', 5000000);
   const [annualRate, setAnnualRate] = useLocalStorage('loan_rate', 8.5);
   const [tenure, setTenure] = useLocalStorage('loan_tenure', 20);
@@ -260,4 +261,6 @@ export default function LoanTenureReducer() {
       </div>
     </CalculatorCard>
   );
-}
+});
+
+export default LoanTenureReducer;

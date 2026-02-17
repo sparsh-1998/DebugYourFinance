@@ -12,6 +12,20 @@ export default defineConfig({
     setupFiles: './src/test/setup.js',
     css: false,
     include: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/test/',
+        '**/*.test.{js,jsx,ts,tsx}',
+        '**/*.spec.{js,jsx,ts,tsx}',
+        '**/dist/',
+        '**/build/',
+        'vite.config.js',
+        'vitest.config.js',
+      ],
+    },
   },
   resolve: {
     alias: {

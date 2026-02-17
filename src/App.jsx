@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './layouts/Layout';
 import ScrollToTop from './components/layout/ScrollToTop';
+import PWAInstallPrompt from './components/features/PWAInstallPrompt';
 import { PageSkeleton } from './components/common';
 
 // Lazy load pages with error handling
@@ -60,6 +61,7 @@ function App() {
             </Route>
           </Routes>
         </Suspense>
+        <PWAInstallPrompt />
       </BrowserRouter>
     </ThemeProvider>
   );

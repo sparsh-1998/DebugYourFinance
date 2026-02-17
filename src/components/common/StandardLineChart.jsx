@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import ChartContainer from './ChartContainer';
@@ -16,7 +17,7 @@ import { CHART_YEARS, CHART_AMOUNT } from '../../constants/messages';
  * @param {string} xLabel - X-axis label (default: 'Years')
  * @param {string} yLabel - Y-axis label (default: 'Amount (₹)')
  */
-function StandardLineChart({
+const StandardLineChart = memo(function StandardLineChart({
   data,
   lines,
   title,
@@ -25,6 +26,27 @@ function StandardLineChart({
   xLabel = CHART_YEARS,
   yLabel = CHART_AMOUNT
 }) {
+  // Validate data before rendering
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <ChartContainer title={title} subtitle={subtitle}>
+        <div className="flex items-center justify-center h-64 text-slate-500 dark:text-slate-400">
+          <p>No data available to display</p>
+        </div>
+      </ChartContainer>
+    );
+  }
+
+  if (!Array.isArray(lines) || lines.length === 0) {
+    return (
+      <ChartContainer title={title} subtitle={subtitle}>
+        <div className="flex items-center justify-center h-64 text-slate-500 dark:text-slate-400">
+          <p>Chart configuration error</p>
+        </div>
+      </ChartContainer>
+    );
+  }
+
   return (
     <ChartContainer title={title} subtitle={subtitle}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
@@ -66,7 +88,7 @@ function StandardLineChart({
       </ResponsiveContainer>
     </ChartContainer>
   );
-}
+});
 
 StandardLineChart.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,

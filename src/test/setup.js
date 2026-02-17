@@ -1,9 +1,40 @@
+import { expect, afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import { expect } from 'vitest';
 import * as matchers from '@testing-library/jest-dom/matchers';
 
-// Extend Vitest's expect with jest-dom matchers
+// Extend vitest's expect with jest-dom matchers
 expect.extend(matchers);
 
-// Cleanup runs automatically with globals: true
-// No need to call afterEach here
+// Cleanup after each test
+afterEach(() => {
+  cleanup();
+});
+
+// Mock window.scrollTo for jsdom
+window.scrollTo = () => {};
+
+// Mock matchMedia for theme detection
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: (query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => {},
+  }),
+});
+
+// Mock IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() {
+    return [];
+  }
+  unobserve() {}
+};

@@ -5,9 +5,6 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  ThemeProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-  };
   const [theme, setTheme] = useLocalStorage('theme', 'light');
 
   useEffect(() => {
@@ -45,3 +42,7 @@ export function useTheme() {
   }
   return context;
 }
+
+ThemeProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

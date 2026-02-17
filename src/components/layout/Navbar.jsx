@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, TrendingUp, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -26,7 +26,11 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <TrendingUp className="h-6 w-6 text-accent" />
+            <img
+              src="/icon.svg"
+              alt="DebugYourFinance Logo"
+              className="h-8 w-8"
+            />
             <span className="text-xl font-bold text-primary dark:text-white">
               DebugYourFinance
             </span>

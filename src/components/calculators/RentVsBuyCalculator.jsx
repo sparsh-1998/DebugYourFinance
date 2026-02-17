@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Home, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -65,7 +66,7 @@ import {
   RENT_VS_BUY_FAQ
 } from '../../constants/educationalContent';
 
-export default function RentVsBuyCalculator() {
+const RentVsBuyCalculator = memo(function RentVsBuyCalculator() {
   // Rent inputs
   const [monthlyRent, setMonthlyRent] = useLocalStorage('rvb_rent', 25000);
   const [annualRentIncrease, setAnnualRentIncrease] = useLocalStorage('rvb_rent_increase', 5);
@@ -436,4 +437,6 @@ export default function RentVsBuyCalculator() {
       </div>
     </CalculatorCard>
   );
-}
+});
+
+export default RentVsBuyCalculator;
