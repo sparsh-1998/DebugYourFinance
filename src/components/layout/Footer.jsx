@@ -1,5 +1,6 @@
 import { Heart, Instagram, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { TOOLS } from '../../constants/tools';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -36,11 +37,13 @@ export default function Footer() {
           <div>
             <h4 className="text-white dark:text-slate-100 font-semibold mb-3">Tools</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/tools/sip" className="hover:text-accent transition-colors">SIP Calculator</Link></li>
-              <li><Link to="/tools/swp" className="hover:text-accent transition-colors">SWP Generator</Link></li>
-              <li><Link to="/tools/tax" className="hover:text-accent transition-colors">Tax Regime Simulator</Link></li>
-              <li><Link to="/tools/loan" className="hover:text-accent transition-colors">Loan Tenure Reducer</Link></li>
-              <li><Link to="/tools/rent-vs-buy" className="hover:text-accent transition-colors">Rent vs Buy</Link></li>
+              {TOOLS.map((tool) => (
+                <li key={tool.id}>
+                  <Link to={`/tools/${tool.id}`} className="hover:text-accent transition-colors">
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

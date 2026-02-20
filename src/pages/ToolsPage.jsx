@@ -1,33 +1,18 @@
-import { useState, lazy, Suspense, useEffect } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { CalculatorSkeleton } from '../components/common';
 import AdBanner from '../components/features/AdBanner';
-
-// Lazy load calculator components
-const SIPCalculator = lazy(() => import('../components/calculators/SIPCalculator'));
-const SWPCalculator = lazy(() => import('../components/calculators/SWPCalculator'));
-const TaxRegimeSimulator = lazy(() => import('../components/calculators/TaxRegimeSimulator'));
-const LoanTenureReducer = lazy(() => import('../components/calculators/LoanTenureReducer'));
-const RentVsBuyCalculator = lazy(() => import('../components/calculators/RentVsBuyCalculator'));
-const CarAffordabilityCalculator = lazy(() => import('../components/calculators/CarAffordabilityCalculator'));
+import { TOOLS, VALID_TOOL_IDS, DEFAULT_TOOL } from '../constants/tools';
 
 export default function ToolsPage() {
   const { toolId } = useParams();
   const navigate = useNavigate();
 
-  const tools = [
-    { id: 'sip', name: 'SIP Calculator', component: SIPCalculator },
-    { id: 'swp', name: 'SWP Generator', component: SWPCalculator },
-    { id: 'tax', name: 'Tax Simulator', component: TaxRegimeSimulator },
-    { id: 'loan', name: 'Loan Reducer', component: LoanTenureReducer },
-    { id: 'rent-vs-buy', name: 'Rent vs Buy', component: RentVsBuyCalculator },
-    { id: 'car', name: 'Car Affordability Check', component: CarAffordabilityCalculator },
-  ];
-
-  const validToolIds = ['sip', 'swp', 'tax', 'loan', 'rent-vs-buy', 'car'];
-  const defaultTab = 'sip';
+  const tools = TOOLS;
+  const validToolIds = VALID_TOOL_IDS;
+  const defaultTab = DEFAULT_TOOL;
 
   const initialTab = toolId && validToolIds.includes(toolId) ? toolId : defaultTab;
   const [activeTab, setActiveTab] = useState(initialTab);
