@@ -38,6 +38,12 @@ export function useLocalStorage(key, initialValue) {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        // Flush pending write immediately on unmount to prevent data loss
+        try {
+          window.localStorage.setItem(key, JSON.stringify(storedValue));
+        } catch (error) {
+          logger.error(`Error setting localStorage key "${key}" on unmount:`, error);
+        }
       }
     };
   }, [key, storedValue]);

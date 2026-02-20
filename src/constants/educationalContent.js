@@ -177,3 +177,50 @@ export const RENT_VS_BUY_FAQ = [
     answer: 'Home loan tax benefits are significant: ₹2 lakhs on interest (Section 24b) + ₹1.5 lakhs on principal (Section 80C). However, these only apply to the old tax regime and only if you have high taxable income. The calculator doesn\'t factor in tax benefits, so buying might be even better if you\'re in higher tax brackets. For most people in the new regime, the basic calculation still holds.'
   }
 ];
+
+// Car Affordability Calculator Educational Content
+export const CAR_HOW_TO_USE = [
+  {
+    title: 'Enter your monthly in-hand salary',
+    description: 'Your actual take-home salary after all deductions'
+  },
+  {
+    title: 'Enter the on-road price of the car',
+    description: 'The total cost including registration, insurance, and other charges'
+  },
+  {
+    title: 'Adjust down payment, loan tenure, and interest rate',
+    description: 'Set down payment (20%+ recommended), loan tenure (4 years max), and current car loan rates'
+  },
+  {
+    title: 'Add monthly running costs',
+    description: 'Estimate fuel, insurance, and maintenance costs for realistic affordability'
+  },
+  {
+    title: 'Check 20/4/10 rule compliance',
+    description: 'Verify if the car fits within the recommended affordability guidelines'
+  }
+];
+
+export const CAR_FAQ = [
+  {
+    question: 'What is the 20/4/10 rule?',
+    answer: 'The 20/4/10 rule is a car affordability guideline: Put down at least 20% as down payment, finance for no more than 4 years, and keep total monthly car expenses (EMI + running costs) under 10% of your gross monthly income.'
+  },
+  {
+    question: 'Why should I follow the 20/4/10 rule?',
+    answer: 'This rule prevents you from becoming "car poor" - spending too much on a depreciating asset. It ensures you can afford the car comfortably while still saving and investing for your future.'
+  },
+  {
+    question: 'What is included in total monthly expense?',
+    answer: 'Total monthly expense includes your EMI payment plus all running costs: fuel, insurance, and maintenance. This gives a realistic picture of car ownership costs.'
+  },
+  {
+    question: 'Can I buy a car if I don\'t meet the 20/4/10 rule?',
+    answer: 'While you can, it\'s not recommended. Overextending yourself on a car means less money for savings, investments, and emergencies. Consider a more affordable car or save up for a larger down payment.'
+  },
+  {
+    question: 'Should I include parking and tolls in monthly costs?',
+    answer: 'Yes, ideally you should include all recurring costs like parking fees, tolls, and any other regular expenses to get the most accurate affordability picture.'
+  }
+];

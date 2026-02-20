@@ -342,14 +342,16 @@ const RentVsBuyCalculator = memo(function RentVsBuyCalculator() {
           />
 
           {/* Monthly Payment Comparison */}
-          <StandardBarChart
-            data={results.yearlyData}
-            bars={[
-              { dataKey: 'cumulativeRent', fill: COLOR_ACCENT_BLUE, name: CHART_TOTAL_RENT },
-              { dataKey: 'cumulativeEmi', fill: COLOR_CHART_PRIMARY, name: CHART_TOTAL_EMI }
-            ]}
-            title={RVB_CUMULATIVE_PAYMENTS}
-          />
+          <div className="mt-8">
+            <StandardBarChart
+              data={results.yearlyData}
+              bars={[
+                { dataKey: 'cumulativeRent', fill: COLOR_ACCENT_BLUE, name: CHART_TOTAL_RENT },
+                { dataKey: 'cumulativeEmi', fill: COLOR_CHART_PRIMARY, name: CHART_TOTAL_EMI }
+              ]}
+              title={RVB_CUMULATIVE_PAYMENTS}
+            />
+          </div>
         </motion.div>
       )}
 

@@ -11,6 +11,7 @@ const SWPCalculator = lazy(() => import('../components/calculators/SWPCalculator
 const TaxRegimeSimulator = lazy(() => import('../components/calculators/TaxRegimeSimulator'));
 const LoanTenureReducer = lazy(() => import('../components/calculators/LoanTenureReducer'));
 const RentVsBuyCalculator = lazy(() => import('../components/calculators/RentVsBuyCalculator'));
+const CarAffordabilityCalculator = lazy(() => import('../components/calculators/CarAffordabilityCalculator'));
 
 export default function ToolsPage() {
   const { toolId } = useParams();
@@ -22,9 +23,10 @@ export default function ToolsPage() {
     { id: 'tax', name: 'Tax Simulator', component: TaxRegimeSimulator },
     { id: 'loan', name: 'Loan Reducer', component: LoanTenureReducer },
     { id: 'rent-vs-buy', name: 'Rent vs Buy', component: RentVsBuyCalculator },
+    { id: 'car', name: 'Car Affordability Check', component: CarAffordabilityCalculator },
   ];
 
-  const validToolIds = ['sip', 'swp', 'tax', 'loan', 'rent-vs-buy'];
+  const validToolIds = ['sip', 'swp', 'tax', 'loan', 'rent-vs-buy', 'car'];
   const defaultTab = 'sip';
 
   const initialTab = toolId && validToolIds.includes(toolId) ? toolId : defaultTab;
@@ -65,6 +67,10 @@ export default function ToolsPage() {
     'rent-vs-buy': {
       title: 'Rent vs Buy Calculator - Home Buying Decision Tool | DebugYourFinance',
       description: 'Should you rent or buy a home? Compare costs, investments, and make informed real estate decisions with our calculator.',
+    },
+    car: {
+      title: '20/4/10 Car Affordability Calculator - Smart Car Buying | DebugYourFinance',
+      description: 'Calculate if you can afford a car using the 20/4/10 rule. Check EMI, running costs, and ensure your car purchase fits your budget.',
     },
   };
 

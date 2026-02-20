@@ -26,6 +26,7 @@ export const CALC_SWP = 'SWP Generator';
 export const CALC_TAX = 'Tax Simulator';
 export const CALC_LOAN = 'Loan Reducer';
 export const CALC_RENT_VS_BUY = 'Rent vs Buy';
+export const CALC_CAR_AFFORDABILITY = 'Car Affordability Check';
 
 // Calculator Descriptions
 export const CALC_SIP_DESC = 'Plan your wealth growth';
@@ -33,6 +34,7 @@ export const CALC_SWP_DESC = 'Systematic Withdrawal Plan - Make your corpus last
 export const CALC_TAX_DESC = 'Compare Old vs New tax regime (FY 2025-26)';
 export const CALC_LOAN_DESC = 'Calculate prepayment impact';
 export const CALC_RENT_VS_BUY_DESC = 'Make the right housing decision with opportunity cost analysis';
+export const CALC_CAR_AFFORDABILITY_DESC = 'Smart car buying with the 20/4/10 rule';
 
 // Common Labels
 export const LABEL_EXPECTED_RETURN = 'Expected Return (% p.a.)';
@@ -185,3 +187,31 @@ export const CHART_TOTAL_RENT = 'Total Rent Paid';
 export const CHART_TOTAL_EMI = 'Total EMI Paid';
 export const CHART_REMAINING_CORPUS = 'Remaining Corpus';
 export const CHART_TOTAL_WITHDRAWN = 'Total Withdrawn';
+
+// Car Affordability Calculator (20/4/10 Rule)
+export const CAR_RULE_20 = '20% Down Payment';
+export const CAR_RULE_4 = '4 Years Max Loan';
+export const CAR_RULE_10 = '10% of Income';
+export const CAR_MONTHLY_SALARY = 'Monthly In-Hand Salary';
+export const CAR_ON_ROAD_PRICE = 'On-Road Price of Car';
+export const CAR_DOWN_PAYMENT_PERCENT = 'Down Payment (%)';
+export const CAR_LOAN_TENURE_YEARS = 'Loan Tenure (Years)';
+export const CAR_INTEREST_RATE = 'Interest Rate (% p.a.)';
+export const CAR_FUEL_COST = 'Monthly Fuel Cost';
+export const CAR_INSURANCE_COST = 'Monthly Insurance';
+export const CAR_MAINTENANCE_COST = 'Monthly Maintenance';
+export const CAR_DOWN_PAYMENT_AMOUNT = 'Down Payment Amount:';
+export const CAR_LOAN_AMOUNT = 'Loan Amount:';
+export const CAR_MONTHLY_EMI = 'Monthly EMI:';
+export const CAR_TOTAL_RUNNING_COST = 'Total Running Cost:';
+export const CAR_TOTAL_MONTHLY_EXPENSE = 'Total Monthly Expense:';
+export const CAR_PERCENT_OF_SALARY = 'Percentage of Salary:';
+export const CAR_AFFORDABLE = '✅ Affordable';
+export const CAR_NOT_AFFORDABLE = '❌ Over Budget';
+export const CAR_REQUIRED_SALARY = 'Required Salary:';
+export const CAR_VERDICT_AFFORDABLE = 'This car is within your budget!';
+export const CAR_VERDICT_NOT_AFFORDABLE = (requiredSalary) => `This car is over your budget. You need a monthly salary of ${requiredSalary} to afford this comfortably.`;
+export const CAR_20_4_10_RULE = 'The 20/4/10 Rule';
+export const CAR_RULE_EXPLANATION = 'The 20/4/10 rule helps you buy a car you can actually afford: Put down 20%, finance for max 4 years, and keep total car expenses under 10% of gross income.';
+export const CAR_BREAKDOWN_TITLE = 'Cost Breakdown';
+export const CAR_RULE_COMPLIANCE = 'Rule Compliance';

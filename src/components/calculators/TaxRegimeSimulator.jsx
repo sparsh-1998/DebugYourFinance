@@ -121,7 +121,7 @@ const TaxRegimeSimulator = memo(function TaxRegimeSimulator() {
         />
 
         {/* Deductions Section */}
-        <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 space-y-4">
+        <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 space-y-4 border-2 border-slate-200 dark:border-slate-600">
           <h4 className="font-semibold text-primary dark:text-white mb-3">{TAX_DEDUCTIONS_SECTION}</h4>
 
           {/* 80C */}

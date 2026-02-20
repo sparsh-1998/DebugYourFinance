@@ -4,7 +4,7 @@
  */
 export default function FormulaBox({ formula }) {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded p-4 font-mono text-sm overflow-x-auto">
+    <div className="bg-white dark:bg-slate-900 rounded p-4 font-mono text-sm overflow-x-auto border-2 border-slate-200 dark:border-slate-600">
       {formula}
     </div>
   );

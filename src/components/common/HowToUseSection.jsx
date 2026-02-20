@@ -1,6 +1,6 @@
 export default function HowToUseSection({ steps }) {
   return (
-    <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6">
+    <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border-2 border-slate-200 dark:border-slate-600">
       <h3 className="text-2xl font-bold text-primary dark:text-white mb-4">
         How to Use This Tool
       </h3>
