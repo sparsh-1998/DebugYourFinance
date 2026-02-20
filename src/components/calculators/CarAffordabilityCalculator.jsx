@@ -223,7 +223,7 @@ const CarAffordabilityCalculator = () => {
       {/* Affordability Verdict */}
       <div className="mb-8">
         <AlertBanner
-          variant={calculations.isAffordable ? 'success' : 'error'}
+          type={calculations.isAffordable ? 'success' : 'error'}
           title={calculations.isAffordable ? CAR_AFFORDABLE : CAR_NOT_AFFORDABLE}
           message={
             calculations.isAffordable
@@ -289,63 +289,51 @@ const CarAffordabilityCalculator = () => {
 
       {/* Cost Breakdown */}
       <div className="grid md:grid-cols-2 gap-6 mb-8 md:items-stretch">
-        <div className="h-full flex flex-col space-y-4">
-          <ComparisonCard
-            title={CAR_BREAKDOWN_TITLE}
-            items={[
-              {
-                label: CAR_DOWN_PAYMENT_AMOUNT,
-                value: formatCurrency(calculations.downPaymentAmount)
-              },
-              {
-                label: CAR_LOAN_AMOUNT,
-                value: formatCurrency(calculations.loanAmount)
-              },
-              {
-                label: CAR_MONTHLY_EMI,
-                value: formatCurrency(calculations.monthlyEMI)
-              },
-              {
-                label: CAR_TOTAL_RUNNING_COST,
-                value: formatCurrency(calculations.totalRunningCost)
-              },
-              {
-                label: CAR_TOTAL_MONTHLY_EXPENSE,
-                value: formatCurrency(calculations.totalMonthlyExpense),
-                valueColor: 'text-accent font-bold text-lg',
-                bordered: true
-              },
-              {
-                label: CAR_PERCENT_OF_SALARY,
-                value: `${calculations.percentOfSalary.toFixed(1)}%`,
-                valueColor: 'text-accent font-bold text-lg'
-              }
-            ]}
-            variant="default"
-            className="flex-1"
-          />
+        <ComparisonCard
+          title={CAR_BREAKDOWN_TITLE}
+          items={[
+            {
+              label: CAR_DOWN_PAYMENT_AMOUNT,
+              value: formatCurrency(calculations.downPaymentAmount)
+            },
+            {
+              label: CAR_LOAN_AMOUNT,
+              value: formatCurrency(calculations.loanAmount)
+            },
+            {
+              label: CAR_MONTHLY_EMI,
+              value: formatCurrency(calculations.monthlyEMI)
+            },
+            {
+              label: CAR_TOTAL_RUNNING_COST,
+              value: formatCurrency(calculations.totalRunningCost)
+            },
+            {
+              label: CAR_TOTAL_MONTHLY_EXPENSE,
+              value: formatCurrency(calculations.totalMonthlyExpense),
+              valueColor: calculations.isAffordable
+                ? 'text-accent font-bold text-lg'
+                : 'text-red-600 dark:text-red-400 font-bold text-lg',
+              bordered: true
+            },
+            {
+              label: CAR_PERCENT_OF_SALARY,
+              value: `${calculations.percentOfSalary.toFixed(1)}%`,
+              valueColor: calculations.isAffordable
+                ? 'text-accent font-bold text-lg'
+                : 'text-red-600 dark:text-red-400 font-bold text-lg'
+            }
+          ]}
+          variant="default"
+        />
 
-          {!calculations.isAffordable && (
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-              <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-1">
-                {CAR_REQUIRED_SALARY}
-              </p>
-              <p className="text-2xl font-bold text-red-900 dark:text-red-100">
-                {formatCurrency(calculations.requiredSalary)}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="h-full">
-          <StandardBarChart
-            data={breakdownChartData}
-            bars={breakdownChartBars}
-            xKey="category"
-            title="Monthly Cost Breakdown"
-            height={300}
-          />
-        </div>
+        <StandardBarChart
+          data={breakdownChartData}
+          bars={breakdownChartBars}
+          xKey="category"
+          title="Monthly Cost Breakdown"
+          height={300}
+        />
       </div>
 
       {/* The 20/4/10 Rule Explanation */}
@@ -367,7 +355,7 @@ const CarAffordabilityCalculator = () => {
 
       {/* Additional Notes */}
       <NoteBox>
-        <strong>Pro Tip:</strong> The 20/4/10 rule is a guideline, not a law. If you live in
+        The 20/4/10 rule is a guideline, not a law. If you live in
         a city with excellent public transport, you might aim for even lower car expenses. If
         you need a car for business, factor in tax deductions. Always consider your complete
         financial picture including emergency fund, retirement savings, and other goals.
