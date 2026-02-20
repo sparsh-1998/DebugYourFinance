@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Car } from 'lucide-react';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useCalculatorStore } from '../../store/calculatorStore';
 import { formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
@@ -52,15 +52,30 @@ import {
 } from '../../constants/educationalContent';
 
 const CarAffordabilityCalculator = () => {
-  // State management with localStorage
-  const [monthlySalary, setMonthlySalary] = useLocalStorage('car_monthly_salary', 50000);
-  const [onRoadPrice, setOnRoadPrice] = useLocalStorage('car_on_road_price', 1000000);
-  const [downPaymentPercent, setDownPaymentPercent] = useLocalStorage('car_down_payment_percent', 20);
-  const [loanTenureYears, setLoanTenureYears] = useLocalStorage('car_loan_tenure', 4);
-  const [interestRate, setInterestRate] = useLocalStorage('car_interest_rate', 9.5);
-  const [fuelCost, setFuelCost] = useLocalStorage('car_fuel_cost', 5000);
-  const [insuranceCost, setInsuranceCost] = useLocalStorage('car_insurance_cost', 2000);
-  const [maintenanceCost, setMaintenanceCost] = useLocalStorage('car_maintenance_cost', 1500);
+  // State management with Zustand
+  const car = useCalculatorStore((state) => state.car);
+  const updateCar = useCalculatorStore((state) => state.updateCar);
+
+  const {
+    monthlySalary,
+    onRoadPrice,
+    downPaymentPercent,
+    loanTenureYears,
+    interestRate,
+    fuelCost,
+    insuranceCost,
+    maintenanceCost,
+  } = car;
+
+  // Setter functions
+  const setMonthlySalary = (value) => updateCar('monthlySalary', value);
+  const setOnRoadPrice = (value) => updateCar('onRoadPrice', value);
+  const setDownPaymentPercent = (value) => updateCar('downPaymentPercent', value);
+  const setLoanTenureYears = (value) => updateCar('loanTenureYears', value);
+  const setInterestRate = (value) => updateCar('interestRate', value);
+  const setFuelCost = (value) => updateCar('fuelCost', value);
+  const setInsuranceCost = (value) => updateCar('insuranceCost', value);
+  const setMaintenanceCost = (value) => updateCar('maintenanceCost', value);
 
   // Calculations
   const calculations = useMemo(() => {

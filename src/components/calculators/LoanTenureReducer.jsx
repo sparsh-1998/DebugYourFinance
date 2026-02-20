@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Home, TrendingDown } from 'lucide-react';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useCalculatorStore } from '../../store/calculatorStore';
 import { calculateEMI, calculatePrepaymentImpact, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
@@ -56,11 +56,24 @@ import {
 } from '../../constants/educationalContent';
 
 const LoanTenureReducer = memo(function LoanTenureReducer() {
-  const [principal, setPrincipal] = useLocalStorage('loan_principal', 5000000);
-  const [annualRate, setAnnualRate] = useLocalStorage('loan_rate', 8.5);
-  const [tenure, setTenure] = useLocalStorage('loan_tenure', 20);
-  const [prepayment, setPrepayment] = useLocalStorage('loan_prepayment', 100000);
-  const [frequency, setFrequency] = useLocalStorage('loan_frequency', 'annual');
+  // State management with Zustand
+  const loan = useCalculatorStore((state) => state.loan);
+  const updateLoan = useCalculatorStore((state) => state.updateLoan);
+
+  const {
+    principal,
+    annualRate,
+    tenure,
+    prepayment,
+    frequency,
+  } = loan;
+
+  // Setter functions
+  const setPrincipal = (value) => updateLoan('principal', value);
+  const setAnnualRate = (value) => updateLoan('annualRate', value);
+  const setTenure = (value) => updateLoan('tenure', value);
+  const setPrepayment = (value) => updateLoan('prepayment', value);
+  const setFrequency = (value) => updateLoan('frequency', value);
 
   // Memoize EMI calculation
   const emi = useMemo(() => {

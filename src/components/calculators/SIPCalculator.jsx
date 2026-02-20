@@ -2,7 +2,7 @@ import { useMemo, memo } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useCalculatorStore } from '../../store/calculatorStore';
 import { calculateSIP, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
@@ -48,11 +48,24 @@ import {
 } from '../../constants/educationalContent';
 
 const SIPCalculator = memo(function SIPCalculator() {
-  const [monthlyInvestment, setMonthlyInvestment] = useLocalStorage('sip_monthly', 10000);
-  const [expectedReturn, setExpectedReturn] = useLocalStorage('sip_return', 12);
-  const [timePeriod, setTimePeriod] = useLocalStorage('sip_years', 10);
-  const [stepUpEnabled, setStepUpEnabled] = useLocalStorage('sip_stepup_enabled', false);
-  const [stepUpPercentage, setStepUpPercentage] = useLocalStorage('sip_stepup_percentage', 10);
+  // State management with Zustand
+  const sip = useCalculatorStore((state) => state.sip);
+  const updateSIP = useCalculatorStore((state) => state.updateSIP);
+
+  const {
+    monthlyInvestment,
+    expectedReturn,
+    timePeriod,
+    stepUpEnabled,
+    stepUpPercentage,
+  } = sip;
+
+  // Setter functions
+  const setMonthlyInvestment = (value) => updateSIP('monthlyInvestment', value);
+  const setExpectedReturn = (value) => updateSIP('expectedReturn', value);
+  const setTimePeriod = (value) => updateSIP('timePeriod', value);
+  const setStepUpEnabled = (value) => updateSIP('stepUpEnabled', value);
+  const setStepUpPercentage = (value) => updateSIP('stepUpPercentage', value);
 
   // Memoize calculation results to prevent unnecessary recalculations
   const results = useMemo(() => {

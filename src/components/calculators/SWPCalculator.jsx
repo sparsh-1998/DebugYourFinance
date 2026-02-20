@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { TrendingDown } from 'lucide-react';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useCalculatorStore } from '../../store/calculatorStore';
 import { calculateSWP, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
@@ -53,12 +53,26 @@ import {
 } from '../../constants/educationalContent';
 
 const SWPCalculator = memo(function SWPCalculator() {
-  const [lumpsumAmount, setLumpsumAmount] = useLocalStorage('swp_lumpsum', 5000000);
-  const [monthlyWithdrawal, setMonthlyWithdrawal] = useLocalStorage('swp_withdrawal', 30000);
-  const [expectedReturn, setExpectedReturn] = useLocalStorage('swp_return', 10);
-  const [timePeriod, setTimePeriod] = useLocalStorage('swp_years', 20);
-  const [inflationEnabled, setInflationEnabled] = useLocalStorage('swp_inflation_enabled', false);
-  const [inflationRate, setInflationRate] = useLocalStorage('swp_inflation_rate', 6);
+  // State management with Zustand
+  const swp = useCalculatorStore((state) => state.swp);
+  const updateSWP = useCalculatorStore((state) => state.updateSWP);
+
+  const {
+    lumpsumAmount,
+    monthlyWithdrawal,
+    expectedReturn,
+    timePeriod,
+    inflationEnabled,
+    inflationRate,
+  } = swp;
+
+  // Setter functions
+  const setLumpsumAmount = (value) => updateSWP('lumpsumAmount', value);
+  const setMonthlyWithdrawal = (value) => updateSWP('monthlyWithdrawal', value);
+  const setExpectedReturn = (value) => updateSWP('expectedReturn', value);
+  const setTimePeriod = (value) => updateSWP('timePeriod', value);
+  const setInflationEnabled = (value) => updateSWP('inflationEnabled', value);
+  const setInflationRate = (value) => updateSWP('inflationRate', value);
 
   // Memoize calculation results to prevent unnecessary recalculations
   const results = useMemo(() => {

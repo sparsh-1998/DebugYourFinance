@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Home, TrendingUp, CheckCircle2 } from 'lucide-react';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useCalculatorStore } from '../../store/calculatorStore';
 import { calculateRentVsBuy, formatCurrency } from '../../utils/calculations';
 import {
   FormInput,
@@ -67,20 +67,32 @@ import {
 } from '../../constants/educationalContent';
 
 const RentVsBuyCalculator = memo(function RentVsBuyCalculator() {
-  // Rent inputs
-  const [monthlyRent, setMonthlyRent] = useLocalStorage('rvb_rent', 25000);
-  const [annualRentIncrease, setAnnualRentIncrease] = useLocalStorage('rvb_rent_increase', 5);
+  // State management with Zustand
+  const rentVsBuy = useCalculatorStore((state) => state.rentVsBuy);
+  const updateRentVsBuy = useCalculatorStore((state) => state.updateRentVsBuy);
 
-  // Buy inputs
-  const [homePrice, setHomePrice] = useLocalStorage('rvb_home_price', 5000000);
-  const [downPayment, setDownPayment] = useLocalStorage('rvb_down_payment', 1000000);
-  const [interestRate, setInterestRate] = useLocalStorage('rvb_interest_rate', 8.5);
-  const [loanTenure, setLoanTenure] = useLocalStorage('rvb_loan_tenure', 20);
-  const [homeAppreciation, setHomeAppreciation] = useLocalStorage('rvb_home_appreciation', 5);
+  const {
+    monthlyRent,
+    annualRentIncrease,
+    homePrice,
+    downPayment,
+    interestRate,
+    loanTenure,
+    homeAppreciation,
+    expectedReturn,
+    timePeriod,
+  } = rentVsBuy;
 
-  // Investment return
-  const [expectedReturn, setExpectedReturn] = useLocalStorage('rvb_return', 12);
-  const [timePeriod, setTimePeriod] = useLocalStorage('rvb_years', 20);
+  // Setter functions
+  const setMonthlyRent = (value) => updateRentVsBuy('monthlyRent', value);
+  const setAnnualRentIncrease = (value) => updateRentVsBuy('annualRentIncrease', value);
+  const setHomePrice = (value) => updateRentVsBuy('homePrice', value);
+  const setDownPayment = (value) => updateRentVsBuy('downPayment', value);
+  const setInterestRate = (value) => updateRentVsBuy('interestRate', value);
+  const setLoanTenure = (value) => updateRentVsBuy('loanTenure', value);
+  const setHomeAppreciation = (value) => updateRentVsBuy('homeAppreciation', value);
+  const setExpectedReturn = (value) => updateRentVsBuy('expectedReturn', value);
+  const setTimePeriod = (value) => updateRentVsBuy('timePeriod', value);
 
   // Memoize loan amount calculation
   const loanAmount = useMemo(() => {

@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Receipt } from 'lucide-react';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useCalculatorStore } from '../../store/calculatorStore';
 import { calculateTax, formatCurrency, TAX_SLABS } from '../../utils/calculations';
 import {
   FormInput,
@@ -56,13 +56,28 @@ import {
 } from '../../constants/educationalContent';
 
 const TaxRegimeSimulator = memo(function TaxRegimeSimulator() {
-  const [income, setIncome] = useLocalStorage('tax_income', 1000000);
-  const [section80C, setSection80C] = useLocalStorage('tax_deductions_80c', 150000);
-  const [section80D, setSection80D] = useLocalStorage('tax_deductions_80d', 25000);
-  const [hra, setHra] = useLocalStorage('tax_hra', 0);
-  const [npsPersonal, setNpsPersonal] = useLocalStorage('tax_nps_personal', 0);
-  const [npsEmployer, setNpsEmployer] = useLocalStorage('tax_nps_employer', 0);
-  const [otherDeductions, setOtherDeductions] = useLocalStorage('tax_other_deductions', 0);
+  // State management with Zustand
+  const tax = useCalculatorStore((state) => state.tax);
+  const updateTax = useCalculatorStore((state) => state.updateTax);
+
+  const {
+    income,
+    section80C,
+    section80D,
+    hra,
+    npsPersonal,
+    npsEmployer,
+    otherDeductions,
+  } = tax;
+
+  // Setter functions
+  const setIncome = (value) => updateTax('income', value);
+  const setSection80C = (value) => updateTax('section80C', value);
+  const setSection80D = (value) => updateTax('section80D', value);
+  const setHra = (value) => updateTax('hra', value);
+  const setNpsPersonal = (value) => updateTax('npsPersonal', value);
+  const setNpsEmployer = (value) => updateTax('npsEmployer', value);
+  const setOtherDeductions = (value) => updateTax('otherDeductions', value);
 
   // Memoize tax calculations for old regime
   const oldRegimeResult = useMemo(() => {
