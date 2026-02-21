@@ -97,3 +97,18 @@ export const VALIDATION_RENT_VS_BUY = {
     required: true
   }
 };
+
+// Budget Calculator Validation
+export const VALIDATION_BUDGET = {
+  monthlySalary: {
+    min: 10000,
+    max: 10000000,
+    allowDecimals: false,
+    required: true
+  },
+  annualBonus: {
+    min: 0,
+    max: 50000000,
+    allowDecimals: false
+  }
+};

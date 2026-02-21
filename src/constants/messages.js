@@ -215,3 +215,7 @@ export const CAR_20_4_10_RULE = 'The 20/4/10 Rule';
 export const CAR_RULE_EXPLANATION = 'The 20/4/10 rule helps you buy a car you can actually afford: Put down 20%, finance for max 4 years, and keep total car expenses under 10% of gross income.';
 export const CAR_BREAKDOWN_TITLE = 'Cost Breakdown';
 export const CAR_RULE_COMPLIANCE = 'Rule Compliance';
+
+// Budget Calculator (50/30/20 Rule)
+export const CALC_BUDGET = '50/30/20 Budget';
+export const CALC_BUDGET_DESC = 'Smart budgeting with the 50/30/20 rule';

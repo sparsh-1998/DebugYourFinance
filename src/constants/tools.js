@@ -7,6 +7,7 @@ const TaxRegimeSimulator = lazy(() => import('../components/calculators/TaxRegim
 const LoanTenureReducer = lazy(() => import('../components/calculators/LoanTenureReducer'));
 const RentVsBuyCalculator = lazy(() => import('../components/calculators/RentVsBuyCalculator'));
 const CarAffordabilityCalculator = lazy(() => import('../components/calculators/CarAffordabilityCalculator'));
+const BudgetCalculator = lazy(() => import('../components/calculators/BudgetCalculator'));
 
 // Centralized tools configuration
 export const TOOLS = [
@@ -16,6 +17,7 @@ export const TOOLS = [
   { id: 'loan', name: 'Loan Reducer', component: LoanTenureReducer },
   { id: 'rent-vs-buy', name: 'Rent vs Buy', component: RentVsBuyCalculator },
   { id: 'car', name: 'Car Affordability Check', component: CarAffordabilityCalculator },
+  { id: 'budget', name: 'Monthly Budget Calculator', component: BudgetCalculator },
 ];
 
 // Helper to get valid tool IDs

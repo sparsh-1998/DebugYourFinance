@@ -224,3 +224,50 @@ export const CAR_FAQ = [
     answer: 'Yes, ideally you should include all recurring costs like parking fees, tolls, and any other regular expenses to get the most accurate affordability picture.'
   }
 ];
+
+// Budget Calculator (50/30/20 Rule) Educational Content
+export const BUDGET_HOW_TO_USE = [
+  {
+    title: 'Enter your monthly in-hand salary',
+    description: 'Your take-home pay after all deductions (not CTC or gross)'
+  },
+  {
+    title: 'Toggle annual bonus if applicable',
+    description: 'Include bonus to calculate average monthly income'
+  },
+  {
+    title: 'Adjust sliders to match your actual spending',
+    description: 'Move sliders to reflect current spending in each category'
+  },
+  {
+    title: 'Review compliance and actionable advice',
+    description: 'Follow recommendations to align with the 50/30/20 rule'
+  }
+];
+
+export const BUDGET_FAQ = [
+  {
+    question: 'What is the 50/30/20 rule?',
+    answer: 'A simple budgeting method dividing after-tax income into: 50% needs (rent, groceries), 30% wants (dining, entertainment), and 20% savings (investments). Popularized by Senator Elizabeth Warren.'
+  },
+  {
+    question: 'What counts as "Needs" vs "Wants"?',
+    answer: 'Needs are essentials you cannot avoid: rent/EMI, groceries, utilities, insurance, transportation, minimum loan payments. Wants are discretionary: dining out, entertainment, shopping, subscriptions, vacations. Ask: Can you survive without it?'
+  },
+  {
+    question: 'Is this realistic in expensive cities?',
+    answer: 'In cities like Mumbai or Bangalore, needs often exceed 50% due to high rent. Adjust to 60/20/20 or 55/25/20 based on your reality. The rule is a guideline. Focus on saving at least 15-20% consistently.'
+  },
+  {
+    question: 'Should EMIs go under Needs or Savings?',
+    answer: 'EMIs for essentials (home, car, education) go under Needs. Prepayment above minimum EMI counts as Savings. Credit card bills for wants go under Wants. Investment SIPs always count as Savings.'
+  },
+  {
+    question: 'What if my savings are below 20%?',
+    answer: 'Start with what you can, even 10%. Set up automated SIPs after salary credit. Review wants for reductions. Gradually increase savings as income grows. Prioritize 6-month emergency fund first.'
+  },
+  {
+    question: 'How do I reduce my Needs percentage?',
+    answer: 'Negotiate rent or relocate, refinance loans for lower EMI, review insurance rates, use public transport, switch utility providers, cook at home. Even 5% reduction frees significant money for savings.'
+  }
+];

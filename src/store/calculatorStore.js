@@ -66,6 +66,16 @@ const defaultValues = {
     expectedReturn: 12,
     timePeriod: 20,
   },
+
+  // Budget Calculator (50/30/20 Rule)
+  budget: {
+    monthlySalary: 50000,
+    annualBonus: 0,
+    bonusEnabled: false,
+    actualNeeds: 25000,
+    actualWants: 15000,
+    actualSavings: 10000,
+  },
 };
 
 // Create the store with persist middleware
@@ -122,6 +132,14 @@ export const useCalculatorStore = create(
         })),
 
       resetRentVsBuy: () => set({ rentVsBuy: defaultValues.rentVsBuy }),
+
+      // Budget Calculator Actions
+      updateBudget: (field, value) =>
+        set((state) => ({
+          budget: { ...state.budget, [field]: value },
+        })),
+
+      resetBudget: () => set({ budget: defaultValues.budget }),
 
       // Global Actions
       resetAllCalculators: () => set(defaultValues),
